@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "pages": "Pages",
+    "blogs": "Blogs",
+    "contact": "Contact",
+    "home_one": "Home One",
+    "home_two": "Home Two",
+    "home_three": "Home Three",
+    "home_four": "Home Four",
+    "home_five": "Home Five",
+    "home_six": "Home Six",
+    "home_seven": "Home Seven",
+    "hotel_grid": "Hotel Grid",
+    "tour_grid_1": "Tour Grid One",
+    "tour_grid_2": "Tour Grid Two",
+    "hotel_listing": "Hotel Listing",
+    "tour_details_1": "Tour Details One",
+    "tour_details_2": "Tour Details Two",
+    "about": "About",
+    "team": "Team",
+    "team_details": "Team Details",
+    "shop": "Shop",
+    "shop_details": "Shop Details",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "checkout": "Checkout",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "login": "Log In",
+    "register": "Register",
+    "error": "Error",
+    "blog_grid": "Blog Grid",
+    "blog_standard": "Blog Standard",
+    "blog_details": "Blog Details"
+  },
+  "header": {
+    "call_us": "Call Us",
+    "login": "Login"
+  },
+  "common": {
+    "book_now": "Book Now",
+    "see_details": "See Details",
+    "read_more": "Read More",
+    "search": "Search",
+    "add_to_cart": "Add to Cart",
+    "add_to_wishlist": "Add to Wishlist",
+    "view_details": "View Details",
+    "find_deals": "Find Awesome Deals"
+  },
+  "forms": {
+    "email": "E-mail",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "signing_in": "Signing in…",
+    "name": "Name",
+    "website": "Website",
+    "comments": "Comments",
+    "send_message": "Send Message",
+    "required": "Email and password are required.",
+    "invalid": "Invalid email or password."
+  },
+  "lang": {
+    "en": "English",
+    "ar": "Arabic",
+    "en_short": "EN",
+    "ar_short": "AR"
+  }
+}

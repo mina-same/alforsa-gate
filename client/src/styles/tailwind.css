@@ -5,3 +5,21 @@
 /* Only scan admin files to keep build fast */
 @source "../components/admin/**/*.tsx";
 @source "../pages/AdminDashboardMain.tsx";
+@source "../lib/utils.ts";
+
+/* shadcn design tokens — scoped to admin */
+@layer base {
+  .admin-scope {
+    --primary: #560ce3;
+    --primary-foreground: #ffffff;
+    --muted: #f3f4f6;
+    --muted-foreground: #6b7280;
+    --background: #ffffff;
+    --foreground: #111827;
+    --border: #e5e7eb;
+    --accent: #f9fafb;
+    --accent-foreground: #111827;
+    --destructive: #ef4444;
+    --ring: #560ce3;
+  }
+}

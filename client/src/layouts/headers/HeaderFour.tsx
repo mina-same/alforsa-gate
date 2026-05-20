@@ -8,6 +8,7 @@ import UseSticky from "../../hooks/UseSticky";
 import CartIcon from "../../svg/CartIcon";
 import PhoneIcon from "../../svg/PhoneIcon";
 import UserIcon from "../../svg/UserIcon";
+import LanguageSwitcher from "../../components/common/LanguageSwitcher";
 
 const HeaderFour = () => {
 
@@ -46,6 +47,15 @@ const HeaderFour = () => {
                               </button>
                               <HeaderCart />
                            </div>
+                           <div className="tg-header-cart p-relative ml-20 d-block d-xl-none">
+                              <Link className="cart-button" to="/cart" aria-label="Shopping cart">
+                                 <span>
+                                    <CartIcon />
+                                 </span>
+                                 <span className="tg-header-cart-count"><TotalCart /></span>
+                              </Link>
+                           </div>
+                           <LanguageSwitcher className="tg-header-language-switcher" />
                            <div className="tg-header-contact-info ml-20 d-flex align-items-center">
                               <span className="tg-header-contact-icon mr-5 d-none d-xl-block">
                                  <PhoneIcon />

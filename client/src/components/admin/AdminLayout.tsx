@@ -5,9 +5,12 @@ import AdminHeader from './AdminHeader';
 import AdminDashboard from './AdminDashboard';
 import AdminTourList from './tours/AdminTourList';
 import AdminTourForm from './tours/AdminTourForm';
+import AdminUserList from './users/AdminUserList';
+import AdminUserForm from './users/AdminUserForm';
 
 type Page = 'dashboard' | 'tours' | 'flights' | 'hotels' | 'bookings' | 'users' | 'reports' | 'settings';
 type TourView = { mode: 'list' } | { mode: 'add' } | { mode: 'edit'; id: string };
+type UserView = { mode: 'list' } | { mode: 'add' } | { mode: 'edit'; id: string };
 
 const pageTitles: Record<Page, { title: string; subtitle: string }> = {
   dashboard: { title: 'Dashboard',  subtitle: "Welcome back! Here's what's happening today." },
@@ -42,18 +45,24 @@ const AdminLayout = () => {
   const { user, logout } = useAuth();
   const [activePage, setActivePage] = useState<Page>('dashboard');
   const [tourView, setTourView]     = useState<TourView>({ mode: 'list' });
+  const [userView, setUserView]     = useState<UserView>({ mode: 'list' });
 
   const meta = pageTitles[activePage];
 
   const handleNav = (page: string) => {
     setActivePage(page as Page);
     if (page === 'tours') setTourView({ mode: 'list' });
+    if (page === 'users') setUserView({ mode: 'list' });
   };
 
   const getSubtitle = () => {
     if (activePage === 'tours') {
       if (tourView.mode === 'add')  return 'Create a new tour package';
       if (tourView.mode === 'edit') return 'Edit tour details';
+    }
+    if (activePage === 'users') {
+      if (userView.mode === 'add')  return 'Create a new admin user';
+      if (userView.mode === 'edit') return 'Edit user account and permissions';
     }
     return meta.subtitle;
   };
@@ -93,10 +102,34 @@ const AdminLayout = () => {
           />
         );
 
+      case 'users':
+        if (userView.mode === 'add') {
+          return (
+            <AdminUserForm
+              onSaved={() => setUserView({ mode: 'list' })}
+              onCancel={() => setUserView({ mode: 'list' })}
+            />
+          );
+        }
+        if (userView.mode === 'edit') {
+          return (
+            <AdminUserForm
+              userId={userView.id}
+              onSaved={() => setUserView({ mode: 'list' })}
+              onCancel={() => setUserView({ mode: 'list' })}
+            />
+          );
+        }
+        return (
+          <AdminUserList
+            onAdd={() => setUserView({ mode: 'add' })}
+            onEdit={(id) => setUserView({ mode: 'edit', id })}
+          />
+        );
+
       case 'flights':
       case 'hotels':
       case 'bookings':
-      case 'users':
       case 'reports':
       case 'settings':
         return <ComingSoon title={meta.title} />;
@@ -121,11 +154,9 @@ const AdminLayout = () => {
           pageSubtitle={getSubtitle()}
           primaryAction={
             activePage === 'tours' && tourView.mode === 'list'
-              ? {
-                  label: 'Add Tour',
-                  onClick: () => setTourView({ mode: 'add' }),
-                  icon: <PlusIcon />,
-                }
+              ? { label: 'Add Tour', onClick: () => setTourView({ mode: 'add' }), icon: <PlusIcon /> }
+              : activePage === 'users' && userView.mode === 'list' && user?.role === 'superadmin'
+              ? { label: 'Add User', onClick: () => setUserView({ mode: 'add' }), icon: <PlusIcon /> }
               : undefined
           }
         />

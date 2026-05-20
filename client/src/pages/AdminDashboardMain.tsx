@@ -1,10 +1,18 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import AdminLayout from '../components/admin/AdminLayout';
-import AdminLogin from '../components/admin/AdminLogin';
 import SEO from '../components/SEO';
 
 const AdminGate = () => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login', { replace: true });
+    }
+  }, [loading, user, navigate]);
 
   if (loading) {
     return (
@@ -14,7 +22,9 @@ const AdminGate = () => {
     );
   }
 
-  return user ? <AdminLayout /> : <AdminLogin />;
+  if (!user) return null;
+
+  return <AdminLayout />;
 };
 
 const AdminDashboardMain = () => (

@@ -31,40 +31,49 @@ import BlogDetailsMain from '../pages/BlogDetailsMain';
 import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
 
+const localizedRoutes = [
+  { path: '/', element: <HomeOneMain /> },
+  { path: '/home-two', element: <HomeTwoMain /> },
+  { path: '/home-three', element: <HomeThreeMain /> },
+  { path: '/home-four', element: <HomeFourMain /> },
+  { path: '/home-five', element: <HomeFiveMain /> },
+  { path: '/home-six', element: <HomeSixMain /> },
+  { path: '/home-seven', element: <HomeSevenMain /> },
+  { path: '/hotel-grid', element: <HotelGridMain /> },
+  { path: '/tour-grid-1', element: <HotelGridTwoMain /> },
+  { path: '/tour-grid-2', element: <TourGridOneMain /> },
+  { path: '/map-listing', element: <HotelListingMain /> },
+  { path: '/tour-details', element: <TourDetailsOneMain /> },
+  { path: '/tour-details-2', element: <TourDetailsTwoMain /> },
+  { path: '/about', element: <AboutMain /> },
+  { path: '/team', element: <TeamMain /> },
+  { path: '/team-details', element: <TeamDetailsMain /> },
+  { path: '/shop', element: <ShopMain /> },
+  { path: '/shop-details', element: <ShopDetailsMain /> },
+  { path: '/cart', element: <CartMain /> },
+  { path: '/wishlist', element: <WishlistMain /> },
+  { path: '/checkout', element: <CheckoutMain /> },
+  { path: '/pricing', element: <PricingMain /> },
+  { path: '/faq', element: <FaqMain /> },
+  { path: '/login', element: <LogInMain /> },
+  { path: '/register', element: <RegisterMain /> },
+  { path: '/blog-grid', element: <BlogOneMain /> },
+  { path: '/blog-standard', element: <BlogTwoMain /> },
+  { path: '/blog-details', element: <BlogDetailsMain /> },
+  { path: '/contact', element: <ContactMain /> },
+];
+
 const AppNavigation = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomeOneMain />} />
         <Route path="/admin" element={<AdminDashboardMain />} />
-        <Route path="/home-two" element={<HomeTwoMain />} />
-        <Route path="/home-three" element={<HomeThreeMain />} />
-        <Route path="/home-four" element={<HomeFourMain />} />
-        <Route path="/home-five" element={<HomeFiveMain />} />
-        <Route path="/home-six" element={<HomeSixMain />} />
-        <Route path="/home-seven" element={<HomeSevenMain />} />
-        <Route path="/hotel-grid" element={<HotelGridMain />} />
-        <Route path="/tour-grid-1" element={<HotelGridTwoMain />} />
-        <Route path="/tour-grid-2" element={<TourGridOneMain />} />
-        <Route path="/map-listing" element={<HotelListingMain />} />
-        <Route path="/tour-details" element={<TourDetailsOneMain />} />
-        <Route path="/tour-details-2" element={<TourDetailsTwoMain />} />
-        <Route path="/about" element={<AboutMain />} />
-        <Route path="/team" element={<TeamMain />} />
-        <Route path="/team-details" element={<TeamDetailsMain />} />
-        <Route path="/shop" element={<ShopMain />} />
-        <Route path="/shop-details" element={<ShopDetailsMain />} />
-        <Route path="/cart" element={<CartMain />} />
-        <Route path="/wishlist" element={<WishlistMain />} />
-        <Route path="/checkout" element={<CheckoutMain />} />
-        <Route path="/pricing" element={<PricingMain />} />
-        <Route path="/faq" element={<FaqMain />} />
-        <Route path="/login" element={<LogInMain />} />
-        <Route path="/register" element={<RegisterMain />} />
-        <Route path="/blog-grid" element={<BlogOneMain />} />
-        <Route path="/blog-standard" element={<BlogTwoMain />} />
-        <Route path="/blog-details" element={<BlogDetailsMain />} />
-        <Route path="/contact" element={<ContactMain />} />
+        {localizedRoutes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
+        {localizedRoutes.map(({ path, element }) => (
+          <Route key={`/ar${path}`} path={`/ar${path === '/' ? '' : path}`} element={element} />
+        ))}
         <Route path="*" element={<ErrorMain />} />
       </Routes>
     </Router>
