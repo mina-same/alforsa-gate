@@ -1,6 +1,5 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AdminDashboardMain from '../pages/AdminDashboardMain';
-import HomeOneMain from '../pages/HomeOneMain';
 import HomeTwoMain from '../pages/HomeTwoMain';
 import HomeThreeMain from '../pages/HomeThreeMain';
 import HomeFourMain from '../pages/HomeFourMain';
@@ -13,6 +12,7 @@ import HotelListingMain from '../pages/HotelListingMain';
 import TourGridOneMain from '../pages/TourGridOneMain';
 import TourDetailsOneMain from '../pages/TourDetailsOneMain';
 import TourDetailsTwoMain from '../pages/TourDetailsTwoMain';
+import TourDetailsOneSlugMain from '../pages/TourDetailsOneSlugMain';
 import AboutMain from '../pages/AboutMain';
 import TeamMain from '../pages/TeamMain';
 import TeamDetailsMain from '../pages/TeamDetailsMain';
@@ -32,7 +32,7 @@ import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
 
 const localizedRoutes = [
-  { path: '/', element: <HomeOneMain /> },
+  { path: '/', element: <HomeFourMain /> },
   { path: '/home-two', element: <HomeTwoMain /> },
   { path: '/home-three', element: <HomeThreeMain /> },
   { path: '/home-four', element: <HomeFourMain /> },
@@ -44,7 +44,9 @@ const localizedRoutes = [
   { path: '/tour-grid-2', element: <TourGridOneMain /> },
   { path: '/map-listing', element: <HotelListingMain /> },
   { path: '/tour-details', element: <TourDetailsOneMain /> },
-  { path: '/tour-details-2', element: <TourDetailsTwoMain /> },
+  { path: '/tour-details-2', element: <Navigate to="/en/tour/grand-egypt-nile-journey-cairo-luxor-aswan" replace /> },
+  { path: '/tour/:slug', element: <TourDetailsTwoMain /> },
+  { path: '/tour2/:slug', element: <TourDetailsOneSlugMain /> },
   { path: '/about', element: <AboutMain /> },
   { path: '/team', element: <TeamMain /> },
   { path: '/team-details', element: <TeamDetailsMain /> },
@@ -67,10 +69,14 @@ const AppNavigation = () => {
   return (
     <Router>
       <Routes>
+        {/* Root redirect to /en */}
+        <Route path="/" element={<Navigate to="/en" replace />} />
         <Route path="/admin" element={<AdminDashboardMain />} />
+        {/* English routes: /en and /en/... */}
         {localizedRoutes.map(({ path, element }) => (
-          <Route key={path} path={path} element={element} />
+          <Route key={`/en${path}`} path={`/en${path === '/' ? '' : path}`} element={element} />
         ))}
+        {/* Arabic routes: /ar and /ar/... */}
         {localizedRoutes.map(({ path, element }) => (
           <Route key={`/ar${path}`} path={`/ar${path === '/' ? '' : path}`} element={element} />
         ))}

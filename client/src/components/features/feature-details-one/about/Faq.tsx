@@ -1,91 +1,89 @@
-import { useEffect, useState } from "react";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTourDetails } from '../../../../hooks/useTourDetails';
+import { getLang } from '../../../../utils/getLang';
 
-interface FaqData {
-   id: number;
-   day: string;
-   title: string;
-   desc: string;
-   showAnswer: boolean;
-};
-
-const faq_data: FaqData[] = [
-   {
-      id: 1,
-      day: "Day-01",
-      title: "London to Amsterdam",
-      desc: "Trade Center is the seventh tallest building in the world and the tallest building in the w hemisph ere. This skyscraper standst view of New York City. From here, you have awesome Manhattan the Statue of Liberty, Brooklyn, Staten Island, ",
-      showAnswer: false,
-   },
-   {
-      id: 2,
-      day: "Day-02",
-      title: "Art Museums, Central Park, Rockefeller Center, Times Square",
-      desc: "Trade Center is the seventh tallest building in the world and the tallest building in the w hemisph ere. This skyscraper standst view of New York City. From here, you have awesome Manhattan the Statue of Liberty, Brooklyn, Staten Island, ",
-      showAnswer: false,
-   },
-   {
-      id: 3,
-      day: "Day-03",
-      title: "The Statue of Liberty, Ellis Island, the Tenement Museum & a Food Tour",
-      desc: "Trade Center is the seventh tallest building in the world and the tallest building in the w hemisph ere. This skyscraper standst view of New York City. From here, you have awesome Manhattan the Statue of Liberty, Brooklyn, Staten Island, ",
-      showAnswer: false,
-   },
-   {
-      id: 4,
-      day: "Day-04",
-      title: "Empire State Building, Chelsea Market, the High Line & Hudson Yards",
-      desc: "Trade Center is the seventh tallest building in the world and the tallest building in the w hemisph ere. This skyscraper standst view of New York City. From here, you have awesome Manhattan the Statue of Liberty, Brooklyn, Staten Island, ",
-      showAnswer: false,
-   },
-];
+const renderRichText = (value: string) => (
+  /<\/?[a-z][\s\S]*>/i.test(value)
+    ? <div dangerouslySetInnerHTML={{ __html: value }} />
+    : <p>{value}</p>
+);
 
 const Faq = () => {
+  const { tour, lang } = useTourDetails();
+  const { t } = useTranslation();
+  const [openId, setOpenId] = useState<number>(1);
 
-   const [faqData, setFaqData] = useState<FaqData[]>([]);
+  if (!tour?.itinerary?.days?.length) return null;
 
-   useEffect(() => {
-      const filtered = faq_data;
-      const updatedData = faq_data.map((item) => ({
-         ...item,
-         showAnswer: item.id === filtered[0]?.id
-      }));
-      setFaqData(updatedData);
-   }, []);
+  const { generalDescription, days } = tour.itinerary;
+  const genDesc = generalDescription ? getLang(generalDescription, lang) : '';
 
-   const toggleAnswer = (faqId: number) => {
-      setFaqData((prevFaqData) =>
-         prevFaqData.map((faq) => ({
-            ...faq,
-            showAnswer: faq.id === faqId
-         }))
-      );
-   };
+  const toggle = (day: number) => setOpenId((prev) => (prev === day ? -1 : day));
 
-   return (
-      <div className="tg-tour-faq-wrap mb-70">
-         <h4 className="tg-tour-about-title mb-15">Tour Plan</h4>
-         <p className="text-capitalize lh-28 mb-20">Castle in one day is next to impossible. Designed specifically for trave arelimited time in London
-            ws you to check off a range of southern England‘s are historical</p>
-         <div className="tg-tour-about-faq-inner">
-            <div className="tg-tour-about-faq" id="accordionExample">
-               {faqData.map((item) => (
-                  <div key={item.id} className="accordion-item">
-                     <h2 className="accordion-header">
-                        <button className={`accordion-button ${item.showAnswer ? "" : "collapsed"}`} onClick={() => toggleAnswer(item.id)} type="button">
-                           <span>{item.day}</span>{item.title}
-                        </button>
-                     </h2>
-                     <div id="collapseOne" className={`accordion-collapse collapse ${item.showAnswer ? "show" : ""}`}>
-                        <div className="accordion-body">
-                           <p>{item.desc}</p>
+  return (
+    <div className="tg-tour-faq-wrap mb-70">
+      <h4 className="tg-tour-about-title mb-15">
+        <i className="fa-solid fa-route mr-10 tg-tour-section-title-icon"></i>
+        {t('tour.sections.tour_plan')}
+      </h4>
+      {genDesc && (
+        <p className="text-capitalize lh-28 mb-20">{genDesc}</p>
+      )}
+      <div className="tg-tour-about-faq-inner">
+        <div className="tg-tour-about-faq" id="accordionExample">
+          {days.map((dayItem) => {
+            const isOpen = openId === dayItem.day;
+            const title = getLang(dayItem.title, lang);
+            const description = getLang(dayItem.description, lang);
+
+            return (
+              <div key={dayItem.day} className="accordion-item">
+                <h2 className="accordion-header">
+                  <button
+                    className={`accordion-button${isOpen ? '' : ' collapsed'}`}
+                    type="button"
+                    onClick={() => toggle(dayItem.day)}
+                  >
+                    <span>Day-{String(dayItem.day).padStart(2, '0')}</span>
+                    {title}
+                  </button>
+                </h2>
+                {isOpen && (
+                  <div className="accordion-collapse show">
+                    <div className="accordion-body tg-tour-plan-body">
+                      {renderRichText(description)}
+                      {dayItem.activities?.length > 0 && (
+                        <div className="tg-tour-about-list mt-15">
+                          <ul>
+                            {dayItem.activities.map((act, ai) => (
+                              <li key={ai}>
+                                <span className="icon mr-10">
+                                  <i className="fa-sharp fa-solid fa-circle-dot fa-fw"></i>
+                                </span>
+                                <span className="text">
+                                  <strong>{getLang(act.heading, lang)}</strong>
+                                  {act.description && (
+                                    <span>
+                                      {' — '}{getLang(act.description, lang)}
+                                    </span>
+                                  )}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                     </div>
+                      )}
+                    </div>
                   </div>
-               ))}
-            </div>
-         </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
-   )
-}
+    </div>
+  );
+};
 
-export default Faq
+export default Faq;

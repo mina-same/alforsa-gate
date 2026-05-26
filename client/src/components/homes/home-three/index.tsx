@@ -7,7 +7,7 @@ import CtaTwo from "./CtaTwo"
 import Location from "./Location"
 import Testimonial from "./Testimonial"
 import Cta from "../home-one/Cta"
-import HeaderThree from "../../../layouts/headers/HeaderThree"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 import BannerFormThree from "../../common/banner-form/BannerFormThree"
 import FooterThree from "../../../layouts/footers/FooterThree"
 import Listing from"./Listing";
@@ -15,7 +15,7 @@ import Listing from"./Listing";
 const HomeThree = () => {
    return (
       <>
-         <HeaderThree />
+         <HeaderFour />
          <main>
             <Banner />
             <BannerFormThree />

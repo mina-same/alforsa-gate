@@ -1,8 +1,11 @@
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/authService';
 
 const LoginForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
@@ -12,14 +15,14 @@ const LoginForm = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!email || !password) { setError('Email and password are required.'); return; }
+    if (!email || !password) { setError(t('forms.required')); return; }
     setLoading(true);
     try {
       await authService.login(email, password);
       navigate('/admin', { replace: true });
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })
-        ?.response?.data?.message || 'Invalid email or password.';
+        ?.response?.data?.message || t('forms.invalid');
       setError(msg);
     } finally {
       setLoading(false);
@@ -33,7 +36,7 @@ const LoginForm = () => {
           <input
             className="input"
             type="email"
-            placeholder="E-mail"
+            placeholder={t('forms.email')}
             value={email}
             onChange={e => setEmail(e.target.value)}
             autoComplete="email"
@@ -44,7 +47,7 @@ const LoginForm = () => {
           <input
             className="input"
             type="password"
-            placeholder="Password"
+            placeholder={t('forms.password')}
             value={password}
             onChange={e => setPassword(e.target.value)}
             autoComplete="current-password"
@@ -58,7 +61,7 @@ const LoginForm = () => {
         )}
         <div className="col-lg-12">
           <button type="submit" className="tg-btn w-100" disabled={loading}>
-            {loading ? 'Signing in…' : 'Sign In'}
+            {loading ? t('forms.signing_in') : t('forms.sign_in')}
           </button>
         </div>
       </div>

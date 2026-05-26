@@ -1,0 +1,12 @@
+import { Response, NextFunction } from 'express';
+import { AuthRequest } from '../middleware/auth';
+export declare const getTours: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const getTourById: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const getTourBySlug: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const createTour: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const updateTour: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const toggleActive: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const toggleFeatured: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const deleteTour: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+export declare const getTourStats: (_req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
+//# sourceMappingURL=tourController.d.ts.map

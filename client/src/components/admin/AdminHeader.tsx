@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 interface AdminHeaderProps {
   pageTitle?: string;
@@ -15,6 +16,10 @@ const AdminHeader = ({
   pageSubtitle = "Welcome back, here's what's happening today.",
   primaryAction,
 }: AdminHeaderProps) => {
+  const { user } = useAuth();
+  const displayName = user?.name || 'Admin User';
+  const avatarInitial = displayName.trim().charAt(0).toUpperCase() || 'A';
+
   return (
     <header className="admin-header">
       <div className="admin-header__breadcrumb">
@@ -36,7 +41,8 @@ const AdminHeader = ({
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <input type="text" placeholder="Search..." />
+          <input type="text" placeholder="Search dashboard..." />
+          <span className="search-bar__shortcut">⌘K</span>
         </div>
 
         {/* Notifications */}
@@ -55,7 +61,9 @@ const AdminHeader = ({
         </button>
 
         {/* Avatar */}
-        <div className="header-avatar" title="Admin User">A</div>
+        <div className="header-profile" title={displayName}>
+          <div className="header-avatar">{avatarInitial}</div>
+        </div>
       </div>
     </header>
   );

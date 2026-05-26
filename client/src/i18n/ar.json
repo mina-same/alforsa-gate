@@ -55,11 +55,58 @@
     "sign_in": "تسجيل الدخول",
     "signing_in": "جارٍ تسجيل الدخول…",
     "name": "الاسم",
+    "your_name": "اسمك",
     "website": "الموقع الإلكتروني",
+    "email_address": "البريد الإلكتروني",
     "comments": "التعليقات",
+    "write_message": "اكتب رسالتك",
+    "save_comment_info": "احفظ اسمي وبريدي الإلكتروني وموقعي في هذا المتصفح لاستخدامها في المرة القادمة.",
+    "submit_review": "إرسال التقييم",
     "send_message": "إرسال الرسالة",
     "required": "البريد الإلكتروني وكلمة المرور مطلوبان.",
     "invalid": "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+  },
+  "tour": {
+    "breadcrumb": { "home": "الرئيسية", "tour_grid": "قائمة الجولات" },
+    "header": { "share": "مشاركة", "add_to_wishlist": "أضف للمفضلة", "reviews": "تقييم", "from": "من", "per_person": "/ شخص" },
+    "feature": { "duration": "المدة", "type": "النوع", "group_size": "حجم المجموعة", "availability": "التوفر", "pickup": "الاستقبال", "style": "الأسلوب", "spots_left": "أماكن متبقية", "total": "إجمالي" },
+    "sections": {
+      "about": "عن هذه الجولة",
+      "highlights": "أبرز ما في الرحلة",
+      "what_you_love": "ما ستعشقه في الرحلة",
+      "tour_plan": "خطة الجولة",
+      "included_excluded": "مشمول / غير مشمول",
+      "what_to_pack": "ماذا تحضر",
+      "tour_pricing": "تسعيرة الجولة",
+      "important_notes": "ملاحظات مهمة",
+      "cancellation_policy": "سياسة الإلغاء",
+      "location": "الموقع",
+      "tour_documents": "وثائق الجولة",
+      "tags": "الوسوم",
+      "customer_reviews": "تقييمات العملاء",
+      "faq": "الأسئلة الشائعة",
+      "leave_review": "اكتب تقييماً",
+      "related_tours": "جولات ذات صلة",
+      "video_reviews": "مراجعات فيديو"
+    },
+    "pricing": { "group_size": "حجم المجموعة", "price_per_person": "السعر / شخص", "solo": "فردي", "pax_2_4": "٢–٤ أفراد", "pax_5_8": "٥–٨ أفراد", "pax_9_16": "٩–١٦ فرد" },
+    "review": {
+      "excellent": "ممتاز", "very_good": "جيد جداً", "good": "جيد", "average": "متوسط", "below_average": "دون المتوسط",
+      "based_on": "بناءً على", "reviews": "تقييم",
+      "location": "الموقع", "accommodation": "الإقامة", "guide_quality": "جودة المرشد", "value": "القيمة", "transport": "النقل"
+    },
+    "review_form": { "location": "الموقع:", "price": "السعر:", "amenities": "المرافق:", "rooms": "الغرف:", "services": "الخدمات:" },
+    "sidebar": {
+      "book_this_tour": "احجز هذه الجولة",
+      "spots_available": "أماكن", "available_out_of": "متاحة من",
+      "time": "الوقت:", "tickets": "التذاكر:",
+      "adult": "بالغ", "adult_age": "(١٤ عاماً فأكثر)",
+      "youth": "شاب", "youth_age": "(١٣–١٧ عاماً)",
+      "children": "أطفال", "children_age": "(أقل من ١٣)",
+      "add_extra": "إضافات:",
+      "service_per_booking": "خدمة لكل حجز", "service_per_person": "خدمة لكل شخص",
+      "total_cost": "التكلفة الإجمالية:", "book_now": "احجز الآن"
+    }
   },
   "lang": {
     "en": "English",

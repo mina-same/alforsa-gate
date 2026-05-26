@@ -1,11 +1,11 @@
 import FooterFive from "../../../layouts/footers/FooterFive"
-import InnerHeader from "../../../layouts/headers/InnerHeader"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 import LoginArea from "./LoginArea"
 
 const Login = () => {
    return (
       <>
-         <InnerHeader />
+         <HeaderFour />
          <main>
             <LoginArea />
          </main>

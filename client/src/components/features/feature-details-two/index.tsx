@@ -1,23 +1,41 @@
-import BreadCrumb from "./BreadCrumb"
-import TourDetailsArea from "./TourDetailsArea"
-import TourAboutDetails from "./TourAboutDetails"
-import Listing from "./Listing"
-import HeaderSix from "../../../layouts/headers/HeaderSix"
-import FooterFive from "../../../layouts/footers/FooterFive"
+import BreadCrumb from './BreadCrumb';
+import TourDetailsArea from './TourDetailsArea';
+import TourAboutDetails from './TourAboutDetails';
+import Listing from './Listing';
+import HeaderFour from '../../../layouts/headers/HeaderFour';
+import FooterFive from '../../../layouts/footers/FooterFive';
+import TourDetailSkeleton from '../../ui/TourDetailSkeleton';
+import { useTourDetails } from '../../../hooks/useTourDetails';
 
 const FeatureDetailsTwo = () => {
-   return (
-      <>
-         <HeaderSix />
-         <main>
+  const { loading, error } = useTourDetails();
+
+  return (
+    <>
+      <HeaderFour />
+      <main>
+        {loading ? (
+          <TourDetailSkeleton />
+        ) : error ? (
+          <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
+              <h3 style={{ color: '#ef4444' }}>Tour Not Found</h3>
+              <p style={{ color: '#666' }}>The tour you are looking for does not exist or is no longer available.</p>
+              <a href="/en/tour-grid-1" className="tg-btn tg-btn-switch-animation mt-15">Browse Tours</a>
+            </div>
+          </div>
+        ) : (
+          <>
             <BreadCrumb />
             <TourDetailsArea />
             <TourAboutDetails />
             <Listing />
-         </main>
-         <FooterFive />
-      </>
-   )
-}
+          </>
+        )}
+      </main>
+      <FooterFive />
+    </>
+  );
+};
 
-export default FeatureDetailsTwo
+export default FeatureDetailsTwo;

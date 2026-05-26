@@ -1,5 +1,5 @@
 import FooterSix from "../../../../layouts/footers/FooterSix"
-import HeaderThree from "../../../../layouts/headers/HeaderThree"
+import HeaderFour from "../../../../layouts/headers/HeaderFour"
 import BreadCrumb from "../../../common/BreadCrumb"
 import ShopDetailsArea from "./ShopDetailsArea"
 import ShopDetailsTabArea from "./ShopDetailsTabArea"
@@ -7,7 +7,7 @@ import ShopDetailsTabArea from "./ShopDetailsTabArea"
 const ShopDetails = () => {
    return (
       <>
-         <HeaderThree />
+         <HeaderFour />
          <main>
             <BreadCrumb title="Shop Details" sub_title="Bluetooth Headphone" />
             <ShopDetailsArea />

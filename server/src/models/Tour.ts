@@ -28,6 +28,16 @@ export interface ICurrencyPrice {
   SAR?: number;
 }
 
+export interface IGroupSize {
+  total?: number;
+  remaining?: number;
+}
+
+export interface ITourDocument {
+  url: string;
+  label: ILocalizedString;
+}
+
 export interface IPrices {
   solo?: ICurrencyPrice;
   pax_2_4?: ICurrencyPrice;
@@ -155,6 +165,9 @@ export interface ITour extends Document {
   relatedTours?: IRelatedTour[];
   reviews?: IReview[];
   reviewsCount?: number;
+  averageRating?: number;
+  groupSize?: IGroupSize;
+  tourDocuments?: ITourDocument[];
   seo?: ISEO;
   isActive: boolean;
   isFeatured: boolean;
@@ -186,6 +199,22 @@ const CurrencyPriceSchema = new Schema<ICurrencyPrice>(
     EGP: { type: Number, min: 0 },
     USD: { type: Number, min: 0 },
     SAR: { type: Number, min: 0 },
+  },
+  { _id: false }
+);
+
+const GroupSizeSchema = new Schema<IGroupSize>(
+  {
+    total:     { type: Number, default: 0, min: 0 },
+    remaining: { type: Number, default: 0, min: 0 },
+  },
+  { _id: false }
+);
+
+const TourDocumentSchema = new Schema<ITourDocument>(
+  {
+    url:   { type: String, required: true, trim: true },
+    label: { type: LocalizedStringSchema, required: true },
   },
   { _id: false }
 );
@@ -431,7 +460,10 @@ const TourSchema = new Schema<ITour>(
     relatedTours:        [RelatedTourSchema],
     reviews:             [ReviewSchema],
 
-    reviewsCount: { type: Number, default: 0, min: 0 },
+    reviewsCount:  { type: Number, default: 0, min: 0 },
+    averageRating: { type: Number, default: 0, min: 0, max: 5 },
+    groupSize:     GroupSizeSchema,
+    tourDocuments: { type: [TourDocumentSchema], default: [] },
     seo:          SEOSchema,
 
     isActive:   { type: Boolean, default: true },

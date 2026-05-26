@@ -1,15 +1,163 @@
 import api from './api';
 
-export interface TourListItem {
+// ==================== SHARED TYPES ====================
+
+export interface ILocalizedString {
+  en: string;
+  ar?: string;
+}
+
+export interface ILocalizedMixed {
+  en: any;
+  ar?: any;
+}
+
+export interface IImage {
+  url: string;
+  alt?: ILocalizedString;
+  title?: ILocalizedString;
+  width?: number;
+  height?: number;
+}
+
+export interface ICurrencyPrice {
+  EGP?: number;
+  USD?: number;
+  SAR?: number;
+}
+
+export interface IGroupSize {
+  total?: number;
+  remaining?: number;
+}
+
+export interface INote {
+  title: ILocalizedString;
+  text: ILocalizedMixed;
+}
+
+export interface IFAQ {
+  question: ILocalizedString;
+  answer: ILocalizedMixed;
+}
+
+export interface IDescription {
+  header: ILocalizedString;
+  text: ILocalizedMixed;
+}
+
+export interface IPrices {
+  solo?: ICurrencyPrice;
+  pax_2_4?: ICurrencyPrice;
+  pax_5_8?: ICurrencyPrice;
+  pax_9_16?: ICurrencyPrice;
+}
+
+export interface ISeason {
+  seasonName: string;
+  startDate?: string;
+  endDate?: string;
+  prices: IPrices;
+  notes?: INote[];
+}
+
+export interface IPricingPlan {
+  planName: string;
+  seasons: ISeason[];
+  notes?: INote[];
+}
+
+export interface IActivity {
+  heading: ILocalizedString;
+  description: ILocalizedMixed;
+  image?: IImage;
+}
+
+export interface IItineraryDay {
+  day: number;
+  title: ILocalizedString;
+  description: ILocalizedMixed;
+  activities: IActivity[];
+}
+
+export interface IItinerary {
+  generalDescription?: ILocalizedMixed;
+  days: IItineraryDay[];
+}
+
+export interface IReview {
+  type: 'youtube' | 'text' | 'video';
+  url?: string;
+  title: ILocalizedString;
+  content?: ILocalizedMixed;
+}
+
+export interface ITourDocument {
+  url: string;
+  label: ILocalizedString;
+}
+
+export interface IRelatedTour {
+  id: string;
+  title: ILocalizedString;
+}
+
+// ==================== FULL TOUR TYPE ====================
+
+export interface ITourFull {
   _id: string;
-  heading: { en: string; ar?: string };
-  slug: { en: string; ar?: string };
-  images: { url: string; alt?: string }[];
+  idExternal?: string;
+  heading: ILocalizedString;
+  headingDescription?: ILocalizedMixed;
+  slug: ILocalizedString;
+  Description: IDescription;
+  images: IImage[];
+  gallery?: IImage[];
+  tourLocation?: ILocalizedString;
+  tourAvailability?: ILocalizedString;
+  pickupAndDropOff?: ILocalizedString;
+  tourType?: ILocalizedString;
+  tourStyle?: ILocalizedString;
+  tourHighlights?: ILocalizedMixed[];
+  inclusion?: ILocalizedMixed[];
+  exclusion?: ILocalizedMixed[];
+  pricingPlans: IPricingPlan[];
+  priceStartingFrom?: ICurrencyPrice;
+  duration?: ILocalizedString;
+  meetingPoint?: ILocalizedString;
+  cancellationPolicy?: ILocalizedString;
+  tags?: ILocalizedMixed[];
+  notes?: INote[];
+  whatToPack?: ILocalizedMixed[];
+  tourMapIframe?: string;
+  whatYouWillLoveHtml?: ILocalizedMixed;
+  itinerary?: IItinerary;
+  faqs?: IFAQ[];
+  relatedTours?: IRelatedTour[];
+  reviews?: IReview[];
+  reviewsCount?: number;
+  averageRating?: number;
+  groupSize?: IGroupSize;
+  tourDocuments?: ITourDocument[];
   isActive: boolean;
   isFeatured: boolean;
   viewCount: number;
-  duration?: { en: string; ar?: string };
-  priceStartingFrom?: { EGP?: number; USD?: number; SAR?: number };
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ==================== LIST TYPES (admin) ====================
+
+export interface TourListItem {
+  _id: string;
+  heading: ILocalizedString;
+  slug: ILocalizedString;
+  images: IImage[];
+  isActive: boolean;
+  isFeatured: boolean;
+  viewCount: number;
+  duration?: ILocalizedString;
+  priceStartingFrom?: ICurrencyPrice;
   createdAt: string;
 }
 
@@ -27,7 +175,15 @@ export interface PaginationMeta {
   pages: number;
 }
 
+// ==================== SERVICE ====================
+
 export const tourService = {
+  // Public — fetch by English slug
+  async getBySlug(slug: string): Promise<ITourFull> {
+    const { data } = await api.get(`/tours/slug/${slug}`);
+    return data.data.tour;
+  },
+
   async list(params?: {
     page?: number;
     limit?: number;
@@ -39,17 +195,17 @@ export const tourService = {
     return data.data;
   },
 
-  async getById(id: string): Promise<any> {
+  async getById(id: string): Promise<ITourFull> {
     const { data } = await api.get(`/tours/${id}`);
     return data.data.tour;
   },
 
-  async create(payload: any): Promise<any> {
+  async create(payload: any): Promise<ITourFull> {
     const { data } = await api.post('/tours', payload);
     return data.data.tour;
   },
 
-  async update(id: string, payload: any): Promise<any> {
+  async update(id: string, payload: any): Promise<ITourFull> {
     const { data } = await api.put(`/tours/${id}`, payload);
     return data.data.tour;
   },

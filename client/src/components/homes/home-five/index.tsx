@@ -9,12 +9,12 @@ import Listing from "./Listing"
 import Location from "./Location"
 import CtaThree from "./CtaThree"
 import FooterFive from "../../../layouts/footers/FooterFive"
-import HeaderFive from "../../../layouts/headers/HeaderFive"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 
 const HomeFive = () => {
    return (
       <>
-         <HeaderFive />
+         <HeaderFour />
          <Hero />
          <Location />
          <CtaThree />

@@ -55,11 +55,58 @@
     "sign_in": "Sign In",
     "signing_in": "Signing in…",
     "name": "Name",
+    "your_name": "Your Name",
     "website": "Website",
+    "email_address": "E-mail Address",
     "comments": "Comments",
+    "write_message": "Write Message",
+    "save_comment_info": "Save my name, email, and website in this browser for the next time I comment.",
+    "submit_review": "Submit Review",
     "send_message": "Send Message",
     "required": "Email and password are required.",
     "invalid": "Invalid email or password."
+  },
+  "tour": {
+    "breadcrumb": { "home": "Home", "tour_grid": "Tour Grid" },
+    "header": { "share": "Share", "add_to_wishlist": "Add to Wishlist", "reviews": "Reviews", "from": "From", "per_person": "/ Person" },
+    "feature": { "duration": "Duration", "type": "Type", "group_size": "Group Size", "availability": "Availability", "pickup": "Pickup", "style": "Style", "spots_left": "spots left", "total": "total" },
+    "sections": {
+      "about": "About This Tour",
+      "highlights": "Tour Highlights",
+      "what_you_love": "What You Will Love",
+      "tour_plan": "Tour Plan",
+      "included_excluded": "Included / Excluded",
+      "what_to_pack": "What to Pack",
+      "tour_pricing": "Tour Pricing",
+      "important_notes": "Important Notes",
+      "cancellation_policy": "Cancellation Policy",
+      "location": "Location",
+      "tour_documents": "Tour Documents",
+      "tags": "Tags",
+      "customer_reviews": "Customer Reviews",
+      "faq": "Frequently Asked Questions",
+      "leave_review": "Leave a Reply",
+      "related_tours": "Related Tours",
+      "video_reviews": "Video Reviews"
+    },
+    "pricing": { "group_size": "Group Size", "price_per_person": "Price / Person", "solo": "Solo", "pax_2_4": "2–4 Pax", "pax_5_8": "5–8 Pax", "pax_9_16": "9–16 Pax" },
+    "review": {
+      "excellent": "Excellent", "very_good": "Very Good", "good": "Good", "average": "Average", "below_average": "Below Average",
+      "based_on": "Based On", "reviews": "Reviews",
+      "location": "Location", "accommodation": "Accommodation", "guide_quality": "Guide Quality", "value": "Value", "transport": "Transport"
+    },
+    "review_form": { "location": "Location :", "price": "Price :", "amenities": "Amenities :", "rooms": "Rooms :", "services": "Services :" },
+    "sidebar": {
+      "book_this_tour": "Book This Tour",
+      "spots_available": "spots", "available_out_of": "available out of",
+      "time": "Time:", "tickets": "Tickets:",
+      "adult": "Adult", "adult_age": "(14+ years)",
+      "youth": "Youth", "youth_age": "(13–17 years)",
+      "children": "Children", "children_age": "(under 13)",
+      "add_extra": "Add Extra:",
+      "service_per_booking": "Service per booking", "service_per_person": "Service per person",
+      "total_cost": "Total Cost:", "book_now": "Book now"
+    }
   },
   "lang": {
     "en": "English",

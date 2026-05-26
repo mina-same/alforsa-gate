@@ -1,12 +1,12 @@
 import FeatureArea from "./FeatureArea"
 import Breadcrumb from "./Breadcrumb"
-import HeaderSix from "../../../layouts/headers/HeaderSix"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 import FooterSix from "../../../layouts/footers/FooterSix"
 
 const FeatureFour = () => {
    return (
       <>
-         <HeaderSix />
+         <HeaderFour />
          <main>
             <Breadcrumb />
             <FeatureArea />

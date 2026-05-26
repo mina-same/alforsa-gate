@@ -338,6 +338,33 @@
                     text-transform: capitalize;
                 }
             }
+            & .tg-tour-plan-body {
+                color: var(--tg-grey-1);
+                min-height: auto;
+                padding-bottom: 22px;
+
+                & p {
+                    margin-bottom: 12px;
+                    text-transform: none;
+                }
+
+                & .tg-tour-about-list ul {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                & .tg-tour-about-list li {
+                    display: flex;
+                    align-items: flex-start;
+                    margin-bottom: 10px;
+                }
+
+                & .tg-tour-about-list .text,
+                & .tg-tour-about-list .text span {
+                    color: var(--tg-grey-1);
+                    text-transform: none;
+                }
+            }
             & .accordion-header {
                 padding: 12px 80px 12px 12px ;
             }
@@ -742,6 +769,19 @@
                 @media #{$xs} {
                     padding: 20px 28px 15px 20px;
                 }
+
+                &--plain {
+                    box-shadow: none;
+                    border: 0;
+                    border-radius: 0;
+                    background: transparent;
+                    padding: 0 0 34px 0;
+                    border-bottom: 1px solid var(--tg-grey-7);
+
+                    @media #{$xs} {
+                        padding: 0 0 28px 0;
+                    }
+                }
             }
             &-content{
                 & .tg-tour-about-list-2 {
@@ -750,6 +790,168 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.tg-tour-pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border-top: 1px solid var(--tg-grey-7);
+
+    th {
+        padding: 12px 0;
+        text-align: left;
+        font-weight: 700;
+        color: var(--tg-common-black-2);
+        border-bottom: 1px solid var(--tg-grey-7);
+
+        &:last-child {
+            text-align: right;
+        }
+    }
+
+    td {
+        padding: 13px 0;
+        font-weight: 500;
+        border-bottom: 1px solid var(--tg-grey-7);
+
+        &:last-child {
+            text-align: right;
+            font-weight: 700;
+            color: var(--tg-theme-primary);
+        }
+    }
+}
+
+.tg-tour-pricing-note {
+    padding-left: 14px;
+    border-left: 3px solid var(--tg-theme-primary);
+    font-size: 14px;
+
+    span {
+        color: var(--tg-grey-1);
+    }
+}
+
+.tg-tour-notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tg-tour-note-item {
+    padding-left: 16px;
+    border-left: 3px solid #f59e0b;
+
+    p:first-child {
+        font-weight: 700;
+        color: var(--tg-common-black-2);
+        font-size: 14px;
+    }
+
+    p:last-child {
+        color: var(--tg-grey-1);
+        font-size: 14px;
+    }
+}
+
+.tg-tour-section-title-icon {
+    color: var(--tg-color-1, var(--tg-theme-primary));
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.tg-tour-policy-text {
+    padding-left: 16px;
+    border-left: 3px solid #0284c7;
+
+    p {
+        color: var(--tg-grey-1);
+    }
+}
+
+.tg-tour-share-link-spaced {
+    margin-left: 25px;
+}
+
+.tg-tour-feature-list-grid {
+    gap: 0;
+
+    &__item {
+        width: 33.33%;
+        margin-right: 0;
+        padding-right: 12px;
+        box-sizing: border-box;
+    }
+}
+
+html[dir="rtl"] {
+    .tg-tour-share-link-spaced {
+        margin-left: 0;
+        margin-right: 25px;
+    }
+
+    .tg-tour-about-faq .accordion-button span {
+        margin-right: 0;
+        margin-left: 12px;
+    }
+
+    .tg-tour-about-faq .accordion-button::after {
+        right: -50px;
+        // left: -50px;
+    }
+
+    .tg-tour-feature-list-grid__item {
+        padding-right: 0;
+        padding-left: 12px;
+    }
+
+    .tg-tour-details-video-feature-list ul li .icon {
+        margin-right: 0;
+        margin-left: 11px;
+    }
+
+    .tg-tour-section-title-icon,
+    .tg-tour-about-list .icon {
+        margin-right: 0;
+        margin-left: 10px;
+    }
+
+    .tg-tour-note-item,
+    .tg-tour-pricing-note,
+    .tg-tour-policy-text {
+        padding-left: 0;
+        padding-right: 16px;
+        border-left: 0;
+    }
+
+    .tg-tour-note-item,
+    .tg-tour-pricing-note {
+        border-right: 3px solid #f59e0b;
+    }
+
+    .tg-tour-policy-text {
+        border-right: 3px solid #0284c7;
+    }
+
+    .tg-tour-about-review-form {
+        .input,
+        .textarea {
+            text-align: right;
+            direction: rtl;
+        }
+
+        .review-checkbox {
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+            text-align: right;
+        }
+
+        .tg-checkbox {
+            margin-right: 10px;
+            margin-left: 0;
         }
     }
 }

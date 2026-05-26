@@ -11,13 +11,13 @@ import Counter from "./Counter"
 import Testimonial from "../home-seven/Testimonial"
 import Blog from "./Blog"
 import Brand from "../home-seven/Brand"
-import HeaderSix from "../../../layouts/headers/HeaderSix"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 import FooterSix from "../../../layouts/footers/FooterSix"
 
 const HomeSix = () => {
   return (
     <>
-      <HeaderSix />
+      <HeaderFour />
       <main>
         <BookingForm />
         <Banner />

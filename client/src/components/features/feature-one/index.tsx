@@ -1,8 +1,7 @@
 import FeatureArea from "./FeatureArea"
 import BreadCrumb from "./BreadCrumb"
-import HeaderSix from "../../../layouts/headers/HeaderSix"
-import FooterSix from "../../../layouts/footers/FooterSix"
 import HeaderFour from "../../../layouts/headers/HeaderFour"
+import FooterSix from "../../../layouts/footers/FooterSix"
 
 const FeatureOne = () => {
    return (

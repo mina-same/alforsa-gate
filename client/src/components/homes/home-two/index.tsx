@@ -8,13 +8,13 @@ import Counter from './Counter'
 import Cta from './Cta'
 import Testimonial from './Testimonial'
 import Blog from '../home-one/Blog'
-import HeaderTwo from '../../../layouts/headers/HeaderTwo'
+import HeaderFour from '../../../layouts/headers/HeaderFour'
 import FooterTwo from '../../../layouts/footers/FooterTwo'
 
 const HomeTwo = () => {
    return (
       <>
-         <HeaderTwo />
+         <HeaderFour />
          <main>
             <Banner />
             <Listing />

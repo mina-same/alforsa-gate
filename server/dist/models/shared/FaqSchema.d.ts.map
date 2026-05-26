@@ -1,0 +1,1 @@
+{"version":3,"file":"FaqSchema.d.ts","sourceRoot":"","sources":["../../../src/models/shared/FaqSchema.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,UAAU,CAAC;AAClC,OAAO,EAAE,gBAAgB,EAAE,eAAe,EAA+C,MAAM,mBAAmB,CAAC;AAEnH,MAAM,WAAW,IAAI;IACnB,QAAQ,EAAE,gBAAgB,CAAC;IAC3B,MAAM,EAAE,eAAe,CAAC;CACzB;AAED,eAAO,MAAM,SAAS;;;;;;;;EAMrB,CAAC"}

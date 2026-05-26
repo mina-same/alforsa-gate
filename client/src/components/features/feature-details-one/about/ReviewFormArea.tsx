@@ -1,62 +1,39 @@
-import ReviewForm from "../../../forms/ReviewForm";
-
-interface DataType {
-   id: number;
-   title: string;
-   rating: string[];
-}
-
-const review_data: DataType[] = [
-   {
-      id: 1,
-      title: "Location :",
-      rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",]
-   },
-   {
-      id: 2,
-      title: "Price :",
-      rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",]
-   },
-   {
-      id: 3,
-      title: "Amenities :",
-      rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",]
-   },
-   {
-      id: 4,
-      title: "Rooms :",
-      rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",]
-   },
-   {
-      id: 5,
-      title: "Services :",
-      rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",]
-   },
-];
+import { useTranslation } from 'react-i18next';
+import ReviewForm from '../../../forms/ReviewForm';
 
 const ReviewFormArea = () => {
-   return (
-      <div className="tg-tour-about-review-form-wrap mb-45">
-         <h4 className="tg-tour-about-title mb-5">Leave a Reply</h4>
-         <div className="tg-tour-about-rating-category mb-20">
-            <ul>
-               {review_data.map((item) => (
-                  <li key={item.id}>
-                     <label>{item.title}</label>
-                     <div className="rating-icon">
-                        {item.rating.map((rat, i) => (
-                           <i key={i} className={rat}></i>
-                        ))}
-                     </div>
-                  </li>
-               ))}
-            </ul>
-         </div>
-         <div className="tg-tour-about-review-form">
-            <ReviewForm />
-         </div>
-      </div>
-   )
-}
+  const { t } = useTranslation();
 
-export default ReviewFormArea
+  const ratingCategories = [
+    { id: 1, key: 'review_form.location' },
+    { id: 2, key: 'review_form.price' },
+    { id: 3, key: 'review_form.amenities' },
+    { id: 4, key: 'review_form.rooms' },
+    { id: 5, key: 'review_form.services' },
+  ];
+
+  return (
+    <div className="tg-tour-about-review-form-wrap mb-45">
+      <h4 className="tg-tour-about-title mb-5">{t('tour.sections.leave_review')}</h4>
+      <div className="tg-tour-about-rating-category mb-20">
+        <ul>
+          {ratingCategories.map((item) => (
+            <li key={item.id}>
+              <label>{t(`tour.${item.key}`)}</label>
+              <div className="rating-icon">
+                {[...Array(5)].map((_, i) => (
+                  <i key={i} className="fa-sharp fa-solid fa-star"></i>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="tg-tour-about-review-form">
+        <ReviewForm />
+      </div>
+    </div>
+  );
+};
+
+export default ReviewFormArea;

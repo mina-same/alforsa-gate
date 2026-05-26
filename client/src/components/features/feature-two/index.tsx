@@ -1,12 +1,12 @@
 import FeatureArea from "./FeatureArea"
 import BreadCrumb from "./BreadCrumb"
 import BannerForm from "./BannerForm"
-import HeaderThree from "../../../layouts/headers/HeaderThree"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 
 const FeatureTwo = () => {
    return (
       <>
-         <HeaderThree />
+         <HeaderFour />
          <main>
             <BreadCrumb />
             <BannerForm />

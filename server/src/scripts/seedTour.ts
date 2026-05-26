@@ -7,13 +7,10 @@ const seed = async () => {
 
   const slug = 'grand-egypt-nile-journey-cairo-luxor-aswan';
   const existing = await Tour.findOne({ 'slug.en': slug });
-  if (existing) {
-    console.log('Tour already exists — skipping.');
-    await mongoose.disconnect();
-    return;
-  }
+  const action = existing ? 'updated' : 'seeded';
 
-  await Tour.create({
+  const tourData = {
+    idExternal: 'AFG-EGY-NILE-8D-001',
     heading: {
       en: 'Grand Egypt Nile Journey: Cairo, Luxor & Aswan',
       ar: 'رحلة النيل المصرية الكبرى: القاهرة، الأقصر وأسوان',
@@ -46,38 +43,80 @@ const seed = async () => {
 
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=1200&q=80',
-        alt: 'Great Pyramids of Giza at sunrise',
+        url: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=1200&q=80',
+        alt: {
+          en: 'Great Sphinx with the Pyramids of Giza behind',
+          ar: 'أبو الهول العظيم مع أهرامات الجيزة في الخلفية',
+        },
+        title: {
+          en: 'Giza Pyramids & Sphinx',
+          ar: 'أهرامات الجيزة وأبو الهول',
+        },
         width: 1200,
         height: 800,
       },
       {
         url: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=1200&q=80',
-        alt: 'Karnak Temple columns at sunset, Luxor',
+        alt: {
+          en: 'Karnak Temple columns at sunset, Luxor',
+          ar: 'أعمدة معبد الكرنك عند الغروب في الأقصر',
+        },
+        title: {
+          en: 'Karnak Temple, Luxor',
+          ar: 'معبد الكرنك، الأقصر',
+        },
         width: 1200,
         height: 800,
       },
       {
         url: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=1200&q=80',
-        alt: 'Felucca sailing on the Nile River at sunset',
-        width: 1200,
-        height: 800,
-      },
-      {
-        url: 'https://images.unsplash.com/photo-1601834658058-e282f9bf8e06?w=1200&q=80',
-        alt: 'Luxor Temple illuminated at night',
-        width: 1200,
-        height: 800,
-      },
-      {
-        url: 'https://images.unsplash.com/photo-1554260570-47f1a4b1b2ac?w=1200&q=80',
-        alt: 'Philae Temple on its island in Aswan',
+        alt: {
+          en: 'Felucca sailing on the Nile River at sunset',
+          ar: 'فلوكة تبحر في نهر النيل عند الغروب',
+        },
+        title: {
+          en: 'Nile Felucca Sunset',
+          ar: 'غروب الفلوكة على النيل',
+        },
         width: 1200,
         height: 800,
       },
       {
         url: 'https://images.unsplash.com/photo-1562832135-14a35d25edef?w=1200&q=80',
-        alt: 'Valley of the Kings entrance in Luxor',
+        alt: {
+          en: 'Ancient temple ruins in Luxor',
+          ar: 'آثار معبد قديم في الأقصر',
+        },
+        title: {
+          en: 'Luxor Ancient Temples',
+          ar: 'معابد الأقصر القديمة',
+        },
+        width: 1200,
+        height: 800,
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=1200&q=80',
+        alt: {
+          en: 'Nile-side Nubian village near Aswan',
+          ar: 'قرية نوبية على ضفاف النيل قرب أسوان',
+        },
+        title: {
+          en: 'Aswan Nubian Village',
+          ar: 'قرية نوبية في أسوان',
+        },
+        width: 1200,
+        height: 800,
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1562832135-14a35d25edef?w=1200&q=80',
+        alt: {
+          en: 'Valley of the Kings entrance in Luxor',
+          ar: 'مدخل وادي الملوك في الأقصر',
+        },
+        title: {
+          en: 'Valley of the Kings',
+          ar: 'وادي الملوك',
+        },
         width: 1200,
         height: 800,
       },
@@ -86,25 +125,53 @@ const seed = async () => {
     gallery: [
       {
         url: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=800&q=80',
-        alt: 'The Great Sphinx with pyramid behind',
+        alt: {
+          en: 'The Great Sphinx with pyramid behind',
+          ar: 'أبو الهول العظيم مع هرم في الخلفية',
+        },
+        title: {
+          en: 'The Great Sphinx',
+          ar: 'أبو الهول العظيم',
+        },
         width: 800,
         height: 600,
       },
       {
         url: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
-        alt: 'Egyptian Museum, Cairo — golden artefacts',
+        alt: {
+          en: 'Egyptian Museum, Cairo golden artefacts',
+          ar: 'قطع أثرية ذهبية في المتحف المصري بالقاهرة',
+        },
+        title: {
+          en: 'Egyptian Museum Treasures',
+          ar: 'كنوز المتحف المصري',
+        },
         width: 800,
         height: 600,
       },
       {
         url: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=800&q=80',
-        alt: 'Nubian village on the banks of the Nile in Aswan',
+        alt: {
+          en: 'Nubian village on the banks of the Nile in Aswan',
+          ar: 'قرية نوبية على ضفاف النيل في أسوان',
+        },
+        title: {
+          en: 'Nubian Village, Aswan',
+          ar: 'القرية النوبية، أسوان',
+        },
         width: 800,
         height: 600,
       },
       {
-        url: 'https://images.unsplash.com/photo-1583364742888-71ef68e2d895?w=800&q=80',
-        alt: 'Hatshepsut Temple, Deir el-Bahari, Luxor',
+        url: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80',
+        alt: {
+          en: 'Ancient columns and carved stonework in Luxor',
+          ar: 'أعمدة قديمة ونقوش حجرية في الأقصر',
+        },
+        title: {
+          en: 'Luxor Temple Stonework',
+          ar: 'نقوش معابد الأقصر',
+        },
         width: 800,
         height: 600,
       },
@@ -142,11 +209,50 @@ const seed = async () => {
       en: 'Free cancellation up to 14 days before departure. 50% refund for cancellations 7–13 days prior. No refund within 7 days of departure.',
       ar: 'إلغاء مجاني حتى ١٤ يوماً قبل المغادرة. استرداد ٥٠٪ للإلغاء قبل ٧–١٣ يوماً. لا يُرد المبلغ في غضون ٧ أيام من المغادرة.',
     },
+    tourMapIframe: 'https://www.google.com/maps?q=Cairo%20Luxor%20Aswan%20Egypt&output=embed',
+    mapSchema: {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Grand Egypt Nile Journey Route',
+      description: 'Key stops across Cairo, Luxor, and Aswan on the 8-day Egypt Nile itinerary.',
+      itemListOrder: 'Sequential',
+      itemListElement: [
+        {
+          '@type': 'TouristAttraction',
+          position: 1,
+          name: 'Giza Plateau',
+          description: 'The Great Pyramids, the Sphinx, and the Valley Temple outside Cairo.',
+          geo: { '@type': 'GeoCoordinates', latitude: '29.9792', longitude: '31.1342' },
+          address: { '@type': 'PostalAddress', addressLocality: 'Giza', addressCountry: 'Egypt' },
+        },
+        {
+          '@type': 'TouristAttraction',
+          position: 2,
+          name: 'Karnak Temple Complex',
+          description: 'The vast temple complex of ancient Thebes on Luxor East Bank.',
+          geo: { '@type': 'GeoCoordinates', latitude: '25.7188', longitude: '32.6573' },
+          address: { '@type': 'PostalAddress', addressLocality: 'Luxor', addressCountry: 'Egypt' },
+        },
+        {
+          '@type': 'TouristAttraction',
+          position: 3,
+          name: 'Philae Temple',
+          description: 'The island temple dedicated to Isis near Aswan.',
+          geo: { '@type': 'GeoCoordinates', latitude: '24.0250', longitude: '32.8841' },
+          address: { '@type': 'PostalAddress', addressLocality: 'Aswan', addressCountry: 'Egypt' },
+        },
+      ],
+    },
 
     priceStartingFrom: {
       EGP: 25000,
       USD: 520,
       SAR: 1950,
+    },
+
+    groupSize: {
+      total: 16,
+      remaining: 8,
     },
 
     pricingPlans: [
@@ -458,6 +564,67 @@ const seed = async () => {
       },
     ],
 
+    relatedTours: [
+      {
+        id: 'classic-cairo-pyramids-museum-day-tour',
+        title: {
+          en: 'Classic Cairo: Pyramids, Sphinx & Egyptian Museum',
+          ar: 'القاهرة الكلاسيكية: الأهرامات وأبو الهول والمتحف المصري',
+        },
+      },
+      {
+        id: 'luxor-west-bank-valley-of-the-kings',
+        title: {
+          en: 'Luxor West Bank: Valley of the Kings & Hatshepsut',
+          ar: 'الضفة الغربية في الأقصر: وادي الملوك وحتشبسوت',
+        },
+      },
+      {
+        id: 'aswan-philae-nubian-village-felucca',
+        title: {
+          en: 'Aswan: Philae Temple, Nubian Village & Felucca',
+          ar: 'أسوان: معبد فيلة والقرية النوبية والفلوكة',
+        },
+      },
+    ],
+
+    reviews: [
+      {
+        type: 'text',
+        title: {
+          en: 'Perfect first trip to Egypt',
+          ar: 'رحلة أولى مثالية إلى مصر',
+        },
+        content: {
+          en: 'Everything was smooth from airport pickup to the final transfer. The guide made every temple feel alive, and the pace was comfortable for our family.',
+          ar: 'كان كل شيء سلساً من استقبال المطار حتى النقل الأخير. جعل المرشد كل معبد ينبض بالحياة، وكان إيقاع الرحلة مريحاً لعائلتنا.',
+        },
+      },
+      {
+        type: 'video',
+        url: 'https://www.ricksteves.com/watch-read-listen/video/tv-show/egypt',
+        title: {
+          en: 'Egypt overview video inspiration',
+          ar: 'فيديو ملهم عن مصر',
+        },
+        content: {
+          en: 'A travel video reference covering Cairo, Luxor, the Nile, and southern Egypt.',
+          ar: 'مرجع فيديو سياحي يغطي القاهرة والأقصر والنيل وجنوب مصر.',
+        },
+      },
+      {
+        type: 'text',
+        title: {
+          en: 'The Luxor days were unforgettable',
+          ar: 'أيام الأقصر كانت لا تُنسى',
+        },
+        content: {
+          en: 'Karnak and the Valley of the Kings were the highlights. Hotels were clean, transfers were punctual, and the team handled every detail.',
+          ar: 'كان الكرنك ووادي الملوك أبرز محطات الرحلة. الفنادق نظيفة، والتنقلات دقيقة، والفريق اهتم بكل التفاصيل.',
+        },
+      },
+    ],
+
     tags: [
       { en: 'Egypt Tours', ar: 'جولات مصر' },
       { en: 'Pyramids of Giza', ar: 'أهرامات الجيزة' },
@@ -493,7 +660,25 @@ const seed = async () => {
       ar: '<ul><li>الاستيقاظ على منظر أهرامات الجيزة من نافذة فندقك</li><li>الصمت والضخامة في قاعة الأعمدة العظيمة في الكرنك</li><li>النزول إلى الأعماق في مقبرة ملكية عمرها ٣٣٠٠ عام</li><li>الفلوكة تنزلق بهدوء في غروب النيل الذهبي</li><li>الابتسامات الدافئة والألوان الزاهية في الترحيب النوبي</li><li>المغادرة بفهم أعمق لأعظم فصول الحضارة الإنسانية</li></ul>',
     },
 
+    tourDocuments: [
+      {
+        url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        label: {
+          en: 'Tour Brochure PDF',
+          ar: 'كتيب الجولة PDF',
+        },
+      },
+      {
+        url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        label: {
+          en: 'Detailed Day-by-Day Itinerary',
+          ar: 'برنامج تفصيلي يوم بيوم',
+        },
+      },
+    ],
+
     reviewsCount: 147,
+    averageRating: 4.8,
     isActive:    true,
     isFeatured:  true,
     viewCount:   3842,
@@ -512,9 +697,15 @@ const seed = async () => {
         ar: ['جولات مصر', 'جولة أهرامات الجيزة', 'جولة الأقصر أسوان', 'رحلة نيلية', 'وادي الملوك', 'جولة معبد الكرنك', 'جولة مصرية بمرشد', 'باقة سياحية القاهرة', 'معبد فيلة', 'زيارة قرية نوبية'],
       },
     },
-  });
+  };
 
-  console.log('✓ Tour seeded successfully:');
+  await Tour.findOneAndUpdate(
+    { 'slug.en': slug },
+    tourData,
+    { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
+  );
+
+  console.log(`✓ Tour ${action} successfully:`);
   console.log('  Title: Grand Egypt Nile Journey: Cairo, Luxor & Aswan');
   console.log('  Slug:  grand-egypt-nile-journey-cairo-luxor-aswan');
   console.log('  Days:  8 | Nights: 7');

@@ -9,13 +9,13 @@ import Brand from "./Brand"
 import Blog from "../home-three/Blog"
 import Listing from "./Listing"
 import CtaTwo from "../home-one/Cta"
-import HeaderSeven from "../../../layouts/headers/HeaderSeven"
+import HeaderFour from "../../../layouts/headers/HeaderFour"
 import FooterFour from "../../../layouts/footers/FooterFour"
 
 const HomeSeven = () => {
    return (
       <>
-         <HeaderSeven />
+         <HeaderFour />
          <main>
             <Banner />
             <FoodArea />
