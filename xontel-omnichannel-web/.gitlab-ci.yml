@@ -1,0 +1,391 @@
+# .gitlab-ci.yml
+# Enhanced CI/CD pipeline with versioning, GitLab Package Registry, and SSH deployment
+
+variables:
+  # Package configuration
+  PACKAGE_NAME: "${CI_PROJECT_NAME}"
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${CI_COMMIT_TAG}"
+
+  # Node configuration
+  NODE_VERSION: "22.0.0"
+
+  # Versioning strategy: use git tags or generate from commit
+  VERSION: "${CI_COMMIT_TAG}"
+
+  # SSH Deployment configuration
+  # Set these in GitLab CI/CD Settings > Variables:
+  #   SSH_PRIVATE_KEY   → your private key (masked, file type)
+  #   SSH_USER          → remote server username (e.g. deploy)
+  #   SSH_HOST          → remote server hostname or IP
+  #   SSH_PORT          → remote server SSH port (default: 22)
+  #   DEPLOY_PATH       → remote deploy path (default: /var/www/html/web)
+  SSH_PORT: "22"
+  DEPLOY_PATH: "/var/www/html/web"
+
+# Define stages
+stages:
+  - build
+  - test
+  - version
+  - package
+  - deploy
+
+# Cache configuration for node_modules (global)
+.node_cache: &node_cache
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+      - .npm/
+    policy: pull
+
+# Reusable SSH setup snippet
+.ssh_setup: &ssh_setup
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    # File-type variable: GitLab writes key to a temp file, $SSH_PRIVATE_KEY holds the path
+    - chmod 400 "${SSH_PRIVATE_KEY}"
+    - cat "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    # Disable strict host checking and skip known_hosts verification
+    - |
+      cat >> ~/.ssh/config << EOF
+      Host *
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+        LogLevel ERROR
+      EOF
+    - chmod 600 ~/.ssh/config
+
+# Build stage for compiling/preparing assets
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  <<: *node_cache
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    - echo "Building version ${CI_COMMIT_SHORT_SHA}..."
+    - npm run build
+    - ls -la dist/
+  artifacts:
+    name: "${CI_PROJECT_NAME}-build-${CI_COMMIT_SHORT_SHA}"
+    paths:
+      - dist/
+      - package.json
+      - package-lock.json
+    expire_in: 1 day
+    reports:
+      dotenv: build.env
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_TAG'
+
+# Test stage
+test:
+  stage: test
+  image: node:${NODE_VERSION}
+  <<: *node_cache
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    - echo "Running tests..."
+    - npm run test || echo "No tests configured"
+    # Add your test commands here:
+    # - npm run test:unit
+    # - npm run test:integration
+    # - npm run lint
+  coverage: '/Lines\s*:\s*([0-9.]+)%/'
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+# Automatic versioning (creates tag on main)
+create-version-tag:
+  stage: version
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache git curl jq
+  script:
+    - |
+      # Get the latest tag, default to 0.0.0 if none exists
+      LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+      echo "Latest tag: ${LATEST_TAG}"
+
+      # Extract version numbers
+      VERSION_NUMBER=${LATEST_TAG#v}
+      MAJOR=$(echo $VERSION_NUMBER | cut -d. -f1)
+      MINOR=$(echo $VERSION_NUMBER | cut -d. -f2)
+      PATCH=$(echo $VERSION_NUMBER | cut -d. -f3)
+
+      # Determine version bump based on commit message
+      if echo "$CI_COMMIT_MESSAGE" | grep -qiE '\[major\]|breaking:'; then
+        MAJOR=$((MAJOR + 1))
+        MINOR=0
+        PATCH=0
+      elif echo "$CI_COMMIT_MESSAGE" | grep -qiE '\[minor\]|feat:'; then
+        MINOR=$((MINOR + 1))
+        PATCH=0
+      else
+        PATCH=$((PATCH + 1))
+      fi
+
+      NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+      echo "New version: ${NEW_VERSION}"
+
+      # Create tag using GitLab API
+      curl --request POST \
+           --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" \
+           --header "Content-Type: application/json" \
+           --data "{\"tag_name\": \"${NEW_VERSION}\", \"ref\": \"${CI_COMMIT_SHA}\", \"message\": \"Release ${NEW_VERSION}\"}" \
+           "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/repository/tags"
+
+      echo "Created tag: ${NEW_VERSION}"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG == null'
+      # when: manual
+  needs:
+    - build
+    - test
+
+# Package the build artifacts into a zip
+package-artifacts:
+  stage: package
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache zip
+  script:
+    - |
+      # Determine version
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        VERSION="${CI_COMMIT_TAG}"
+      else
+        VERSION="snapshot-${CI_COMMIT_SHORT_SHA}"
+      fi
+
+      echo "Packaging version: ${VERSION}"
+
+      # Create zip archive of dist folder
+      zip -r ${PACKAGE_NAME}-${VERSION}.zip dist/
+
+      # Create checksum
+      sha256sum ${PACKAGE_NAME}-${VERSION}.zip > ${PACKAGE_NAME}-${VERSION}.zip.sha256
+
+      # List package contents
+      ls -lh ${PACKAGE_NAME}-${VERSION}.zip*
+  artifacts:
+    name: "${PACKAGE_NAME}-${CI_COMMIT_TAG:-snapshot}"
+    paths:
+      - "*.zip"
+      - "*.sha256"
+    expire_in: 30 days
+  rules:
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      # when: manual
+  needs:
+    - build
+
+# Deploy to GitLab Package Registry
+deploy-package-registry:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - |
+      # Determine version
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        VERSION="${CI_COMMIT_TAG}"
+      else
+        VERSION="snapshot-${CI_COMMIT_SHORT_SHA}"
+      fi
+
+      PACKAGE_FILE="${PACKAGE_NAME}-${VERSION}.zip"
+      CHECKSUM_FILE="${PACKAGE_FILE}.sha256"
+
+      echo "Deploying ${PACKAGE_FILE} to GitLab Package Registry..."
+
+      # Upload package
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+           --upload-file ${PACKAGE_FILE} \
+           "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${VERSION}/${PACKAGE_FILE}"
+
+      # Upload checksum
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+           --upload-file ${CHECKSUM_FILE} \
+           "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${VERSION}/${CHECKSUM_FILE}"
+
+      echo "Package deployed to registry successfully!"
+      echo "Download URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${VERSION}/${PACKAGE_FILE}"
+  rules:
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      # when: manual
+  needs:
+    - package-artifacts
+  environment:
+    name: package-registry
+    url: ${CI_PROJECT_URL}/-/packages
+
+# Deploy zip artifact to remote SSH server
+deploy-ssh:
+  stage: deploy
+  image: alpine:latest
+  <<: *ssh_setup
+  script:
+    - |
+      # Determine version
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        VERSION="${CI_COMMIT_TAG}"
+      else
+        VERSION="snapshot-${CI_COMMIT_SHORT_SHA}"
+      fi
+
+      PACKAGE_FILE="${PACKAGE_NAME}-${VERSION}.zip"
+
+      echo "Deploying ${PACKAGE_FILE} to ${SSH_HOST}:${DEPLOY_PATH} ..."
+
+      # Upload zip to remote server's temp location
+      scp -P "${SSH_PORT}" "${PACKAGE_FILE}" "${SSH_USER}@${SSH_HOST}:/tmp/${PACKAGE_FILE}"
+
+      # Extract zip into deploy path and clean up
+      ssh -p "${SSH_PORT}" "${SSH_USER}@${SSH_HOST}" bash -s << EOF
+        set -e
+
+        echo "Extracting ${PACKAGE_FILE} into ${DEPLOY_PATH} ..."
+
+        # Ensure deploy directory exists
+        mkdir -p ${DEPLOY_PATH}
+
+        # Backup current deployment (optional safety net)
+        if [ -d "${DEPLOY_PATH}" ] && [ "\$(ls -A ${DEPLOY_PATH})" ]; then
+          BACKUP_PATH="${DEPLOY_PATH}_backup_\$(date +%Y%m%d%H%M%S)"
+          echo "Backing up current deployment to \${BACKUP_PATH} ..."
+          cp -r ${DEPLOY_PATH} \${BACKUP_PATH}
+        fi
+
+        # Extract zip content (dist/ folder) directly into deploy path
+        unzip -o /tmp/${PACKAGE_FILE} 'dist/*' -d /tmp/extract_${CI_COMMIT_SHORT_SHA}
+        cp -r /tmp/extract_${CI_COMMIT_SHORT_SHA}/dist/. ${DEPLOY_PATH}/
+
+        # Cleanup temp files
+        rm -rf /tmp/${PACKAGE_FILE} /tmp/extract_${CI_COMMIT_SHORT_SHA}
+
+        echo "Deployment complete. Files in ${DEPLOY_PATH}:"
+        ls -la ${DEPLOY_PATH}
+      EOF
+
+      echo "SSH deployment finished successfully!"
+  rules:
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      # when: manual
+  needs:
+    - package-artifacts
+  environment:
+    name: staging
+    url: http://${SSH_HOST}
+
+# Deploy zip artifact to remote SSH server production
+deploy-ssh-prod:
+  stage: deploy
+  image: alpine:latest
+  <<: *ssh_setup
+  script:
+    - |
+      # Determine version
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        VERSION="${CI_COMMIT_TAG}"
+      else
+        VERSION="snapshot-${CI_COMMIT_SHORT_SHA}"
+      fi
+
+      PACKAGE_FILE="${PACKAGE_NAME}-${VERSION}.zip"
+
+      echo "Deploying ${PACKAGE_FILE} to ${SSH_HOST_PROD}:${DEPLOY_PATH} ..."
+
+      # Upload zip to remote server's temp location
+      scp -P "${SSH_PORT}" "${PACKAGE_FILE}" "${SSH_USER}@${SSH_HOST_PROD}:/tmp/${PACKAGE_FILE}"
+
+      # Extract zip into deploy path and clean up
+      ssh -p "${SSH_PORT}" "${SSH_USER}@${SSH_HOST_PROD}" bash -s << EOF
+        set -e
+
+        echo "Extracting ${PACKAGE_FILE} into ${DEPLOY_PATH} ..."
+
+        # Ensure deploy directory exists
+        mkdir -p ${DEPLOY_PATH}
+
+        # Backup current deployment (optional safety net)
+        if [ -d "${DEPLOY_PATH}" ] && [ "\$(ls -A ${DEPLOY_PATH})" ]; then
+          BACKUP_PATH="${DEPLOY_PATH}_backup_\$(date +%Y%m%d%H%M%S)"
+          echo "Backing up current deployment to \${BACKUP_PATH} ..."
+          cp -r ${DEPLOY_PATH} \${BACKUP_PATH}
+        fi
+
+        # Extract zip content (dist/ folder) directly into deploy path
+        unzip -o /tmp/${PACKAGE_FILE} 'dist/*' -d /tmp/extract_${CI_COMMIT_SHORT_SHA}
+        cp -r /tmp/extract_${CI_COMMIT_SHORT_SHA}/dist/. ${DEPLOY_PATH}/
+
+        # Cleanup temp files
+        rm -rf /tmp/${PACKAGE_FILE} /tmp/extract_${CI_COMMIT_SHORT_SHA}
+
+        echo "Deployment complete. Files in ${DEPLOY_PATH}:"
+        ls -la ${DEPLOY_PATH}
+      EOF
+
+      echo "SSH deployment finished successfully!"
+  rules:
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+  needs:
+    - package-artifacts
+  environment:
+    name: production
+    url: http://${SSH_HOST_PROD}
+
+# Optional: Create GitLab Release
+create-release:
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "Creating GitLab Release for ${CI_COMMIT_TAG}"
+  release:
+    tag_name: '${CI_COMMIT_TAG}'
+    name: 'Release ${CI_COMMIT_TAG}'
+    description: |
+      ## Changes in ${CI_COMMIT_TAG}
+
+      ### Package Downloads
+      - [${PACKAGE_NAME}-${CI_COMMIT_TAG}.zip](${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${CI_COMMIT_TAG}/${PACKAGE_NAME}-${CI_COMMIT_TAG}.zip)
+      - [Checksum](${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${CI_COMMIT_TAG}/${PACKAGE_NAME}-${CI_COMMIT_TAG}.zip.sha256)
+
+      ### Installation
+      ```bash
+      # Download package
+      curl --header "PRIVATE-TOKEN: <your_token>" \
+           "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${CI_COMMIT_TAG}/${PACKAGE_NAME}-${CI_COMMIT_TAG}.zip" \
+           --output ${PACKAGE_NAME}-${CI_COMMIT_TAG}.zip
+
+      # Extract
+      unzip ${PACKAGE_NAME}-${CI_COMMIT_TAG}.zip
+      ```
+  rules:
+    - if: '$CI_COMMIT_TAG'
+  needs:
+    - deploy-package-registry
+    - deploy-ssh

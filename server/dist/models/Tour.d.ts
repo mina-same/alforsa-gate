@@ -153,4 +153,3 @@ declare const _default: mongoose.Model<ITour, {}, {}, {}, mongoose.Document<unkn
     __v: number;
 }, any>;
 export default _default;
-//# sourceMappingURL=Tour.d.ts.map

@@ -1,12 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.toggleUserActive = exports.updateUser = exports.createUser = exports.getUser = exports.listUsers = void 0;
-const User_1 = __importDefault(require("../models/User"));
+const User_1 = require("../models/User");
 const errorHandler_1 = require("../middleware/errorHandler");
-// GET /api/users
 const listUsers = async (req, res, next) => {
     try {
         const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -38,7 +34,6 @@ const listUsers = async (req, res, next) => {
     }
 };
 exports.listUsers = listUsers;
-// GET /api/users/:id
 const getUser = async (req, res, next) => {
     try {
         const user = await User_1.default.findById(req.params.id);
@@ -51,7 +46,6 @@ const getUser = async (req, res, next) => {
     }
 };
 exports.getUser = getUser;
-// POST /api/users  (superadmin only)
 const createUser = async (req, res, next) => {
     try {
         const { name, email, password, role = 'admin' } = req.body;
@@ -73,14 +67,12 @@ const createUser = async (req, res, next) => {
     }
 };
 exports.createUser = createUser;
-// PUT /api/users/:id  (superadmin only)
 const updateUser = async (req, res, next) => {
     try {
         const { name, email, role, password } = req.body;
         const user = await User_1.default.findById(req.params.id).select('+password');
         if (!user)
             throw new errorHandler_1.AppError('User not found', 404);
-        // Prevent demoting the last superadmin
         if (role && role !== 'superadmin' && user.role === 'superadmin') {
             const superadminCount = await User_1.default.countDocuments({ role: 'superadmin', isActive: true });
             if (superadminCount <= 1) {
@@ -103,17 +95,14 @@ const updateUser = async (req, res, next) => {
     }
 };
 exports.updateUser = updateUser;
-// PATCH /api/users/:id/toggle-active  (superadmin only)
 const toggleUserActive = async (req, res, next) => {
     try {
         const user = await User_1.default.findById(req.params.id);
         if (!user)
             throw new errorHandler_1.AppError('User not found', 404);
-        // Prevent deactivating self
         if (String(user._id) === String(req.user?._id)) {
             throw new errorHandler_1.AppError('You cannot deactivate your own account', 400);
         }
-        // Prevent deactivating the last superadmin
         if (user.role === 'superadmin' && user.isActive) {
             const activeCount = await User_1.default.countDocuments({ role: 'superadmin', isActive: true });
             if (activeCount <= 1) {
@@ -133,7 +122,6 @@ const toggleUserActive = async (req, res, next) => {
     }
 };
 exports.toggleUserActive = toggleUserActive;
-// DELETE /api/users/:id  (superadmin only)
 const deleteUser = async (req, res, next) => {
     try {
         const user = await User_1.default.findById(req.params.id);

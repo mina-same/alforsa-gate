@@ -10,6 +10,7 @@ import HotelGridMain from '../pages/HotelGridMain';
 import HotelGridTwoMain from '../pages/HotelGridTwoMain';
 import HotelListingMain from '../pages/HotelListingMain';
 import TourGridOneMain from '../pages/TourGridOneMain';
+import TourGridLiveMain from '../pages/TourGridLiveMain';
 import TourDetailsOneMain from '../pages/TourDetailsOneMain';
 import TourDetailsTwoMain from '../pages/TourDetailsTwoMain';
 import TourDetailsOneSlugMain from '../pages/TourDetailsOneSlugMain';
@@ -42,6 +43,7 @@ const localizedRoutes = [
   { path: '/hotel-grid', element: <HotelGridMain /> },
   { path: '/tour-grid-1', element: <HotelGridTwoMain /> },
   { path: '/tour-grid-2', element: <TourGridOneMain /> },
+  { path: '/tours', element: <TourGridLiveMain /> },
   { path: '/map-listing', element: <HotelListingMain /> },
   { path: '/tour-details', element: <TourDetailsOneMain /> },
   { path: '/tour-details-2', element: <Navigate to="/en/tour/grand-egypt-nile-journey-cairo-luxor-aswan" replace /> },

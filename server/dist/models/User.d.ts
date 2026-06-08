@@ -20,4 +20,3 @@ declare const _default: mongoose.Model<IUser, {}, {}, {}, mongoose.Document<unkn
     __v: number;
 }, any>;
 export default _default;
-//# sourceMappingURL=User.d.ts.map

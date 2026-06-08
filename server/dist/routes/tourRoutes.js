@@ -4,9 +4,7 @@ const express_1 = require("express");
 const tourController_1 = require("../controllers/tourController");
 const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
-// Public
 router.get('/slug/:slug', tourController_1.getTourBySlug);
-// Protected (admin+)
 router.use(auth_1.protect);
 router.get('/stats', (0, auth_1.requireRole)('admin', 'superadmin'), tourController_1.getTourStats);
 router.get('/', (0, auth_1.requireRole)('admin', 'superadmin'), tourController_1.getTours);

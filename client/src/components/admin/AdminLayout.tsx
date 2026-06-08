@@ -7,8 +7,9 @@ import AdminTourList from './tours/AdminTourList';
 import AdminTourForm from './tours/AdminTourForm';
 import AdminUserList from './users/AdminUserList';
 import AdminUserForm from './users/AdminUserForm';
+import WhatsAppQRPanel from './whatsapp/WhatsAppQRPanel';
 
-type Page = 'dashboard' | 'tours' | 'flights' | 'hotels' | 'bookings' | 'users' | 'reports' | 'settings';
+type Page = 'dashboard' | 'tours' | 'flights' | 'hotels' | 'bookings' | 'users' | 'reports' | 'settings' | 'whatsapp';
 type TourView = { mode: 'list' } | { mode: 'add' } | { mode: 'edit'; id: string };
 type UserView = { mode: 'list' } | { mode: 'add' } | { mode: 'edit'; id: string };
 
@@ -21,6 +22,7 @@ const pageTitles: Record<Page, { title: string; subtitle: string }> = {
   users:     { title: 'Users',      subtitle: 'Manage registered users and admins.' },
   reports:   { title: 'Reports',    subtitle: 'View analytics and export reports.' },
   settings:  { title: 'Settings',   subtitle: 'Configure platform preferences.' },
+  whatsapp:  { title: 'WhatsApp',   subtitle: 'Connect your WhatsApp account to enable messaging.' },
 };
 
 const ComingSoon = ({ title }: { title: string }) => (
@@ -126,6 +128,9 @@ const AdminLayout = () => {
             onEdit={(id) => setUserView({ mode: 'edit', id })}
           />
         );
+
+      case 'whatsapp':
+        return <WhatsAppQRPanel />;
 
       case 'flights':
       case 'hotels':

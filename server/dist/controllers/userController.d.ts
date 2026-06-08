@@ -6,4 +6,3 @@ export declare const createUser: (req: AuthRequest, res: Response, next: NextFun
 export declare const updateUser: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
 export declare const toggleUserActive: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
 export declare const deleteUser: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
-//# sourceMappingURL=userController.d.ts.map

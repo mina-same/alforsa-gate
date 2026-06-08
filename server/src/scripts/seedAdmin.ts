@@ -1,24 +1,26 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import User from '../models/User';
+import { UserSchema } from '../auth/schemas/user.schema';
+
+const UserModel = mongoose.model('User', UserSchema);
 
 const seed = async () => {
-  await mongoose.connect(process.env.MONGODB_URI as string);
+  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/alforsa-gate');
 
-  const existing = await User.findOne({ email: 'admin@example.com' });
+  const existing = await UserModel.findOne({ email: 'admin@example.com' }).select('+password');
   if (existing) {
     console.log('Admin already exists — updating password...');
     existing.password = 'Admin@1234';
     await existing.save();
-    console.log('Password updated.');
+    console.log('✅ Password updated.');
   } else {
-    await User.create({
+    await UserModel.create({
       name: 'Admin',
       email: 'admin@example.com',
       password: 'Admin@1234',
       role: 'superadmin',
     });
-    console.log('Admin created.');
+    console.log('✅ Admin created.');
   }
 
   console.log('  Email:    admin@example.com');

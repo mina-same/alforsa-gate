@@ -1,43 +1,9 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importStar(require("mongoose"));
+const mongoose_1 = require("mongoose");
 const FaqSchema_1 = require("./shared/FaqSchema");
 const ImageSchema_1 = require("./shared/ImageSchema");
 const LocalizedSchema_1 = require("./shared/LocalizedSchema");
-// ==================== SUB-SCHEMAS ====================
 const NoteSchema = new mongoose_1.Schema({
     title: { type: LocalizedSchema_1.LocalizedStringSchema, required: true },
     text: { type: LocalizedSchema_1.LocalizedMixedSchema, required: true },
@@ -169,7 +135,6 @@ const SEOSchema = new mongoose_1.Schema({
     metaImage: ImageSchema_1.ImageSchema,
     mapSchema: MapSchemaSchema,
 }, { _id: false });
-// ==================== MAIN SCHEMA ====================
 const TourSchema = new mongoose_1.Schema({
     idExternal: { type: String, trim: true, unique: true, sparse: true },
     heading: {
@@ -242,7 +207,6 @@ const TourSchema = new mongoose_1.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
-// ==================== INDEXES ====================
 TourSchema.index({ 'slug.en': 1 }, { unique: true, sparse: true });
 TourSchema.index({ 'slug.ar': 1 }, { unique: true, sparse: true });
 TourSchema.index({ isActive: 1 });
@@ -251,8 +215,6 @@ TourSchema.index({ viewCount: -1 });
 TourSchema.index({ createdAt: -1 });
 TourSchema.index({ isActive: 1, isFeatured: 1 });
 TourSchema.index({ 'heading.en': 'text', 'Description.text.en': 'text' });
-// ==================== MIDDLEWARE ====================
-// Auto-populate SEO fields from tour data
 TourSchema.pre('save', function (next) {
     if (!this.seo)
         this.seo = {};
@@ -272,7 +234,6 @@ TourSchema.pre('save', function (next) {
     }
     next();
 });
-// Validate season date ranges
 TourSchema.pre('save', function (next) {
     for (const plan of this.pricingPlans ?? []) {
         for (const season of plan.seasons) {

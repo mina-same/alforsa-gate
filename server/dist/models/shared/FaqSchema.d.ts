@@ -13,4 +13,3 @@ export declare const FAQSchema: Schema<IFAQ, import("mongoose").Model<IFAQ, any,
 } & {
     __v: number;
 }>;
-//# sourceMappingURL=FaqSchema.d.ts.map

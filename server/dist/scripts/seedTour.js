@@ -1,15 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
-const mongoose_1 = __importDefault(require("mongoose"));
-const Tour_1 = __importDefault(require("../models/Tour"));
+const mongoose_1 = require("mongoose");
+const tour_schema_1 = require("../tours/schemas/tour.schema");
+const Tour = mongoose_1.default.model('Tour', tour_schema_1.TourSchema);
 const seed = async () => {
-    await mongoose_1.default.connect(process.env.MONGODB_URI);
+    await mongoose_1.default.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/alforsa-gate');
     const slug = 'grand-egypt-nile-journey-cairo-luxor-aswan';
-    const existing = await Tour_1.default.findOne({ 'slug.en': slug });
+    const existing = await Tour.findOne({ 'slug.en': slug });
     const action = existing ? 'updated' : 'seeded';
     const tourData = {
         idExternal: 'AFG-EGY-NILE-8D-001',
@@ -680,7 +678,7 @@ const seed = async () => {
             },
         },
     };
-    await Tour_1.default.findOneAndUpdate({ 'slug.en': slug }, tourData, { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true });
+    await Tour.findOneAndUpdate({ 'slug.en': slug }, tourData, { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true });
     console.log(`✓ Tour ${action} successfully:`);
     console.log('  Title: Grand Egypt Nile Journey: Cairo, Luxor & Aswan');
     console.log('  Slug:  grand-egypt-nile-journey-cairo-luxor-aswan');

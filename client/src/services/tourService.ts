@@ -181,7 +181,7 @@ export const tourService = {
   // Public — fetch by English slug
   async getBySlug(slug: string): Promise<ITourFull> {
     const { data } = await api.get(`/tours/slug/${slug}`);
-    return data.data.tour;
+    return data.data;
   },
 
   async list(params?: {
@@ -192,22 +192,22 @@ export const tourService = {
     isFeatured?: boolean;
   }): Promise<{ tours: TourListItem[]; pagination: PaginationMeta }> {
     const { data } = await api.get('/tours', { params });
-    return data.data;
+    return { tours: data.tours, pagination: data.pagination };
   },
 
   async getById(id: string): Promise<ITourFull> {
     const { data } = await api.get(`/tours/${id}`);
-    return data.data.tour;
+    return data.data;
   },
 
   async create(payload: any): Promise<ITourFull> {
     const { data } = await api.post('/tours', payload);
-    return data.data.tour;
+    return data.data;
   },
 
   async update(id: string, payload: any): Promise<ITourFull> {
     const { data } = await api.put(`/tours/${id}`, payload);
-    return data.data.tour;
+    return data.data;
   },
 
   async delete(id: string): Promise<void> {
@@ -226,6 +226,7 @@ export const tourService = {
 
   async stats(): Promise<{ stats: TourStats; topViewed: any[] }> {
     const { data } = await api.get('/tours/stats');
-    return data.data;
+    // Server returns: { success, data: { total, active, inactive, featured, topViewed } }
+    return { stats: data.data, topViewed: data.data.topViewed };
   },
 };

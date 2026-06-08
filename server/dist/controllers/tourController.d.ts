@@ -9,4 +9,3 @@ export declare const toggleActive: (req: AuthRequest, res: Response, next: NextF
 export declare const toggleFeatured: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
 export declare const deleteTour: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
 export declare const getTourStats: (_req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
-//# sourceMappingURL=tourController.d.ts.map

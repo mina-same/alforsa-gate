@@ -1,13 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTourStats = exports.deleteTour = exports.toggleFeatured = exports.toggleActive = exports.updateTour = exports.createTour = exports.getTourBySlug = exports.getTourById = exports.getTours = void 0;
-const Tour_1 = __importDefault(require("../models/Tour"));
+const Tour_1 = require("../models/Tour");
 const errorHandler_1 = require("../middleware/errorHandler");
-// ==================== LIST ====================
-// GET /api/tours
 const getTours = async (req, res, next) => {
     try {
         const page = Math.max(1, Number(req.query.page) || 1);
@@ -48,8 +43,6 @@ const getTours = async (req, res, next) => {
     }
 };
 exports.getTours = getTours;
-// ==================== GET ONE ====================
-// GET /api/tours/:id
 const getTourById = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.findById(req.params.id);
@@ -62,13 +55,11 @@ const getTourById = async (req, res, next) => {
     }
 };
 exports.getTourById = getTourById;
-// GET /api/tours/slug/:slug  (public — by English slug)
 const getTourBySlug = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.findOne({ 'slug.en': req.params.slug, isActive: true });
         if (!tour)
             throw new errorHandler_1.AppError('Tour not found', 404);
-        // Increment view count without triggering full validation
         Tour_1.default.findByIdAndUpdate(tour._id, { $inc: { viewCount: 1 } }).exec();
         res.json({ success: true, data: { tour } });
     }
@@ -77,8 +68,6 @@ const getTourBySlug = async (req, res, next) => {
     }
 };
 exports.getTourBySlug = getTourBySlug;
-// ==================== CREATE ====================
-// POST /api/tours
 const createTour = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.create(req.body);
@@ -89,14 +78,11 @@ const createTour = async (req, res, next) => {
     }
 };
 exports.createTour = createTour;
-// ==================== UPDATE ====================
-// PUT /api/tours/:id
 const updateTour = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.findById(req.params.id);
         if (!tour)
             throw new errorHandler_1.AppError('Tour not found', 404);
-        // Merge top-level fields; keep immutable counters
         const { viewCount, createdAt, ...updates } = req.body;
         void viewCount;
         void createdAt;
@@ -109,7 +95,6 @@ const updateTour = async (req, res, next) => {
     }
 };
 exports.updateTour = updateTour;
-// PATCH /api/tours/:id/toggle-active
 const toggleActive = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.findById(req.params.id);
@@ -128,7 +113,6 @@ const toggleActive = async (req, res, next) => {
     }
 };
 exports.toggleActive = toggleActive;
-// PATCH /api/tours/:id/toggle-featured
 const toggleFeatured = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.findById(req.params.id);
@@ -147,8 +131,6 @@ const toggleFeatured = async (req, res, next) => {
     }
 };
 exports.toggleFeatured = toggleFeatured;
-// ==================== DELETE ====================
-// DELETE /api/tours/:id
 const deleteTour = async (req, res, next) => {
     try {
         const tour = await Tour_1.default.findByIdAndDelete(req.params.id);
@@ -161,8 +143,6 @@ const deleteTour = async (req, res, next) => {
     }
 };
 exports.deleteTour = deleteTour;
-// ==================== STATS ====================
-// GET /api/tours/stats  (admin dashboard summary)
 const getTourStats = async (_req, res, next) => {
     try {
         const [total, active, featured, topViewed] = await Promise.all([

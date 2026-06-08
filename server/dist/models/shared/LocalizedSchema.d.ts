@@ -25,4 +25,3 @@ export declare const LocalizedMixedSchema: Schema<ILocalizedMixed, import("mongo
 } & {
     __v: number;
 }>;
-//# sourceMappingURL=LocalizedSchema.d.ts.map

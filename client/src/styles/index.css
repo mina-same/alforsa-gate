@@ -16,6 +16,55 @@
 
 
 
+/* ── Tour grid list-view: fixed image size ───────────────────────────── */
+/*
+   When .list-card-open the card switches to flex-row.
+   We lock the thumb to a fixed width/height so the image
+   doesn't stretch and the content area fills the rest.
+*/
+.list-card.list-card-open .tg-grid-full .tg-listing-card-thumb {
+  width: 260px !important;
+  min-width: 260px !important;
+  height: 220px !important;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 0 !important;
+  flex-shrink: 0;
+}
+
+.list-card.list-card-open .tg-grid-full .tg-listing-card-thumb img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Content fills remaining width */
+.list-card.list-card-open .tg-grid-full .tg-listing-main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive: shrink thumb on tablets */
+@media (max-width: 991px) {
+  .list-card.list-card-open .tg-grid-full .tg-listing-card-thumb {
+    width: 200px !important;
+    min-width: 200px !important;
+    height: 180px !important;
+  }
+}
+
+/* On mobile stack back to column */
+@media (max-width: 575px) {
+  .list-card.list-card-open .tg-grid-full .tg-listing-card-thumb {
+    width: 100% !important;
+    min-width: unset !important;
+    height: 200px !important;
+  }
+  .list-card.list-card-open .tg-grid-full .tg-listing-card-item {
+    flex-direction: column !important;
+  }
+}
+
 /* ── Feature list 3-column flex ──────────────────────────────────────── */
 .tg-tour-feature-list-grid {
   display: flex;
@@ -23,14 +72,14 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  gap: 18px 0;
+  gap: 6px 0;
 }
 .tg-tour-feature-list-grid__item {
   display: flex !important;
   align-items: flex-start;
   gap: 10px;
   width: 33.33% !important;
-  padding-right: 16px;
+  padding-right: 6px !important;
   box-sizing: border-box;
   min-width: 0;
   margin-right: 0 !important;

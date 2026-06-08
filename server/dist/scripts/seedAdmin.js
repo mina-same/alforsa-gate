@@ -1,28 +1,26 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
-const mongoose_1 = __importDefault(require("mongoose"));
-const User_1 = __importDefault(require("../models/User"));
+const mongoose_1 = require("mongoose");
+const user_schema_1 = require("../auth/schemas/user.schema");
+const UserModel = mongoose_1.default.model('User', user_schema_1.UserSchema);
 const seed = async () => {
-    await mongoose_1.default.connect(process.env.MONGODB_URI);
-    const existing = await User_1.default.findOne({ email: 'admin@example.com' });
+    await mongoose_1.default.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/alforsa-gate');
+    const existing = await UserModel.findOne({ email: 'admin@example.com' }).select('+password');
     if (existing) {
         console.log('Admin already exists — updating password...');
         existing.password = 'Admin@1234';
         await existing.save();
-        console.log('Password updated.');
+        console.log('✅ Password updated.');
     }
     else {
-        await User_1.default.create({
+        await UserModel.create({
             name: 'Admin',
             email: 'admin@example.com',
             password: 'Admin@1234',
             role: 'superadmin',
         });
-        console.log('Admin created.');
+        console.log('✅ Admin created.');
     }
     console.log('  Email:    admin@example.com');
     console.log('  Password: Admin@1234');

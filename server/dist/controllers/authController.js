@@ -1,18 +1,14 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createAdmin = exports.getMe = exports.logout = exports.refresh = exports.login = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const User_1 = __importDefault(require("../models/User"));
+const jsonwebtoken_1 = require("jsonwebtoken");
+const User_1 = require("../models/User");
 const errorHandler_1 = require("../middleware/errorHandler");
 const COOKIE_OPTS = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
 };
-// POST /api/auth/login
 const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -28,18 +24,17 @@ const login = async (req, res, next) => {
         }
         const accessToken = user.generateAccessToken();
         const refreshToken = user.generateRefreshToken();
-        // Persist refresh token hash
         user.refreshToken = refreshToken;
         user.lastLogin = new Date();
         await user.save({ validateBeforeSave: false });
         res
             .cookie('accessToken', accessToken, {
             ...COOKIE_OPTS,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         })
             .cookie('refreshToken', refreshToken, {
             ...COOKIE_OPTS,
-            maxAge: 30 * 24 * 60 * 60 * 1000, // 30d
+            maxAge: 30 * 24 * 60 * 60 * 1000,
         })
             .status(200)
             .json({
@@ -61,7 +56,6 @@ const login = async (req, res, next) => {
     }
 };
 exports.login = login;
-// POST /api/auth/refresh
 const refresh = async (req, res, next) => {
     try {
         const token = req.cookies?.refreshToken || req.body.refreshToken;
@@ -92,7 +86,6 @@ const refresh = async (req, res, next) => {
     }
 };
 exports.refresh = refresh;
-// POST /api/auth/logout
 const logout = async (req, res, next) => {
     try {
         if (req.user) {
@@ -108,7 +101,6 @@ const logout = async (req, res, next) => {
     }
 };
 exports.logout = logout;
-// GET /api/auth/me
 const getMe = async (req, res, next) => {
     try {
         const user = await User_1.default.findById(req.user?._id);
@@ -133,7 +125,6 @@ const getMe = async (req, res, next) => {
     }
 };
 exports.getMe = getMe;
-// POST /api/auth/create-admin  (superadmin only — used to seed first admin)
 const createAdmin = async (req, res, next) => {
     try {
         const { name, email, password, role = 'admin' } = req.body;

@@ -5,4 +5,3 @@ export interface AuthRequest extends Request {
 }
 export declare const protect: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>;
 export declare const requireRole: (...roles: string[]) => (req: AuthRequest, res: Response, next: NextFunction) => void;
-//# sourceMappingURL=auth.d.ts.map

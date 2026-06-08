@@ -21,4 +21,3 @@ export declare const ImageSchema: Schema<IImage, import("mongoose").Model<IImage
 } & {
     __v: number;
 }>;
-//# sourceMappingURL=ImageSchema.d.ts.map

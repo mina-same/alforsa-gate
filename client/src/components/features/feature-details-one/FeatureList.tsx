@@ -77,7 +77,7 @@ const FeatureList = () => {
   return (
     <ul className="tg-tour-feature-list-grid">
       {items.map((item) => (
-        <li key={item.id} className="tg-tour-feature-list-grid__item" style={{ width: '33.33%', flexShrink: 0, boxSizing: 'border-box', paddingRight: 20, marginRight: 0 }}>
+        <li key={item.id} className="tg-tour-feature-list-grid__item" style={{ width: '33.33%', flexShrink: 0, boxSizing: 'border-box', paddingRight: 6, marginRight: 0 }}>
           <span className="icon" style={{ flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
           <div>
             <span className="title">{item.sub_title}</span>

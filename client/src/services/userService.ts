@@ -34,7 +34,7 @@ export const userService = {
     if (filters.role)     params.set('role',     filters.role);
     if (filters.isActive !== undefined) params.set('isActive', String(filters.isActive));
     const { data } = await api.get(`/users?${params}`);
-    return data.data;
+    return data.data; // { users, pagination }
   },
 
   async get(id: string): Promise<AdminUserRecord> {
