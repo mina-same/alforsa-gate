@@ -2,6 +2,106 @@
 @import 'react-modal-video/css/modal-video.css';
 @import "swiper/css/bundle";
 
+/* ── Destination: coming soon badge ─────────────────────────────────── */
+.tg-dest-coming-soon-badge {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 18px;
+  border-radius: 100px;
+  white-space: nowrap;
+  z-index: 3;
+}
+.tg-destination-tag.tg-dest-coming-tag {
+  border: none;
+  background: transparent;
+  padding: 8px 0 0;
+}
+.tg-dest-coming-label {
+  background: #f0f4ff;
+  color: #3a5bd9;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 100px;
+  padding: 4px 16px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Destination: seats remaining counter ────────────────────────────── */
+.tg-dest-seats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0 2px;
+}
+.tg-dest-seats-count {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--tg-theme-primary, #e74c3c);
+  line-height: 1;
+}
+.tg-dest-seats-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+}
+
+/* ── RTL: Listing card fixes ─────────────────────────────────────────── */
+[dir="rtl"] .tg-listing-card-duration-tour span svg {
+  margin-right: 0;
+  margin-left: 5px;
+}
+[dir="rtl"] .tg-listing-card-duration-tour {
+  direction: rtl;
+}
+[dir="rtl"] .tg-listing-card-review {
+  direction: rtl;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+[dir="rtl"] .tg-listing-card-review .tg-listing-rating-percent {
+  margin-right: 4px;
+  margin-left: 0;
+}
+[dir="rtl"] .tg-listing-2-price-wrap {
+  direction: rtl;
+}
+[dir="rtl"] .tg-listing-2-price .shift {
+  margin-right: 4px;
+  margin-left: 0;
+}
+[dir="rtl"] .tg-listing-card-content {
+  text-align: right;
+}
+[dir="rtl"] .tg-listing-card-duration-tour span {
+  justify-content: flex-end;
+}
+
+/* ── Testimonial nationality badge ──────────────────────────────────── */
+.tg-testimonial-nationality {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #888;
+  margin-top: 3px;
+}
+.tg-testimonial-flag {
+  font-size: 16px;
+  line-height: 1;
+}
+
 /* ── Skeleton shimmer ────────────────────────────────────────────────── */
 @keyframes tg-skeleton-shimmer {
   0%   { background-position: -600px 0; }
@@ -298,4 +398,65 @@ html[dir="rtl"] .tg-menu-right-action-2 .tg-header-cart.ml-20 {
     padding-left: 0;
     padding-right: 12px;
   }
+}
+
+/* ── Banner Form RTL fixes ─────────────────────────────────────────── */
+
+/* Tab icon: swap margin side */
+html[dir="rtl"] .tg-booking-form-tabs .nav-link .icon,
+html[dir="rtl"] .tg-booking-form-tabs .nav-links .icon {
+  margin-right: 0;
+  margin-left: 7px;
+}
+
+/* "Where are you going" text: flip margin */
+html[dir="rtl"] .tg-booking-title-value {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+/* Location pin icon: move to left side */
+html[dir="rtl"] .tg-booking-add-input-field span.location {
+  right: auto;
+  left: 14px;
+}
+
+/* Parent inner mr-15 spacing: flip */
+html[dir="rtl"] .tg-booking-form-input-group .tg-booking-form-parent-inner.mr-15 {
+  margin-right: 0;
+  margin-left: 15px;
+}
+
+/* Search button arrow icon */
+html[dir="rtl"] .tg-booking-form-search-btn .bk-search-button .ml-5 {
+  margin-left: 0;
+  margin-right: 5px;
+}
+
+/* Guest list item label */
+html[dir="rtl"] .tg-booking-form-location-list .mr-20 {
+  margin-right: 0;
+  margin-left: 20px;
+}
+
+/* Date input: flip padding so calendar icon doesn't overlap text */
+html[dir="rtl"] .tg-booking-add-input-date span {
+  right: auto;
+  left: 15px;
+}
+
+html[dir="rtl"] .tg-booking-add-input-date .input {
+  padding-left: 50px;
+  padding-right: 18px;
+}
+
+/* ── Banner-3 RTL border-radius flip ────────────────────────────────── */
+html[dir="rtl"] .tg-banner-3-big-content {
+  border-radius: 30px 0px 0px 30px;
+}
+
+html[dir="rtl"] .tg-banner-3-content {
+  border-radius: 0px 30px 30px 0px;
+  margin-right: 0;
+  margin-left: -9px;
 }

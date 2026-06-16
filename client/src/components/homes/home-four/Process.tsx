@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Process9 from "../../../svg/home-one/Process9";
 import Process8 from "../../../svg/home-one/Process8";
 import Process7 from "../../../svg/home-one/Process7";
@@ -8,54 +9,29 @@ interface DataType {
    id: number;
    thumb?: string;
    icon?: JSX.Element;
-   title?: string;
-   desc?: string;
+   itemKey?: string;
 }
 
 const process_data: DataType[] = [
-   {
-      id: 1,
-      thumb: "/assets/img/chose/chose-2/thumb-1.jpg",
-   },
-   {
-      id: 2,
-      icon: (<><Process7 /></>),
-      title: "Best Travel Agency",
-      desc: "Are you tired offer theare typical tourist new destination"
-   },
-   {
-      id: 3,
-      thumb: "/assets/img/chose/chose-2/thumb-2.jpg",
-   },
-   {
-      id: 4,
-      icon: (<><Process8 /></>),
-      title: "Secure Journey With Us",
-      desc: "Are you tired offer theare typical tourist new destination"
-   },
-   {
-      id: 5,
-      thumb: "/assets/img/chose/chose-2/thumb-3.jpg",
-   },
-   {
-      id: 6,
-      icon: (<><Process9 /></>),
-      title: "Top Class Places",
-      desc: "Are you tired offer theare typical tourist new destination"
-   },
+   { id: 1, thumb: "/assets/img/chose/chose-2/thumb-1.jpg" },
+   { id: 2, icon: (<><Process7 /></>), itemKey: "1" },
+   { id: 3, thumb: "/assets/img/chose/chose-2/thumb-2.jpg" },
+   { id: 4, icon: (<><Process8 /></>), itemKey: "2" },
+   { id: 5, thumb: "/assets/img/chose/chose-2/thumb-3.jpg" },
+   { id: 6, icon: (<><Process9 /></>), itemKey: "3" },
 ];
 
 const Process = () => {
+   const { t } = useTranslation();
    return (
       <div className="tg-chose-area p-relative z-index-9 pt-135 pb-35">
          <img className="tg-chose-2-shape d-none d-lg-block" src="/assets/img/chose/chose-2/shape.png" alt="shape" />
          <div className="container">
             <div className="col-12">
                <div className="tg-chose-section-title text-center mb-30">
-                  <h5 className="tg-section-subtitle wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".6s">Next Adventure Destination</h5>
-                  <h2 className="mb-15 wow fadeInUp" data-wow-delay=".5s" data-wow-duration=".7s">Why You Should Work With Us</h2>
-                  <p className="text-capitalize wow fadeInUp" data-wow-delay=".6s" data-wow-duration=".8s">Are you tired of the typical tourist destinations and looking<br />
-                     to step out of your comfort zonetravel</p>
+                  <h5 className="tg-section-subtitle wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".6s">{t('home4.process_subtitle')}</h5>
+                  <h2 className="mb-15 wow fadeInUp" data-wow-delay=".5s" data-wow-duration=".7s">{t('home4.process_title')}</h2>
+                  <p className="text-capitalize wow fadeInUp" data-wow-delay=".6s" data-wow-duration=".8s">{t('home4.process_desc')}</p>
                </div>
             </div>
             <div className="row">
@@ -77,8 +53,10 @@ const Process = () => {
                            <div className="tg-chose-2-icon mb-20">
                               {item.icon}
                            </div>
-                           <h4 className="tg-chose-2-title mb-15"><Link to="/contact">{item.title}</Link></h4>
-                           <p>{item.desc}</p>
+                           <h4 className="tg-chose-2-title mb-15">
+                              <Link to="/contact">{t(`home4.process_items.${item.itemKey}.title`)}</Link>
+                           </h4>
+                           <p>{t(`home4.process_items.${item.itemKey}.desc`)}</p>
                         </div>
                      </div>
                   )

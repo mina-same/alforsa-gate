@@ -31,6 +31,7 @@ import BlogTwoMain from '../pages/BlogTwoMain';
 import BlogDetailsMain from '../pages/BlogDetailsMain';
 import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
+import RussiaDestinationMain from '../pages/RussiaDestinationMain';
 
 const localizedRoutes = [
   { path: '/', element: <HomeFourMain /> },
@@ -65,6 +66,7 @@ const localizedRoutes = [
   { path: '/blog-standard', element: <BlogTwoMain /> },
   { path: '/blog-details', element: <BlogDetailsMain /> },
   { path: '/contact', element: <ContactMain /> },
+  { path: '/destination/russia', element: <RussiaDestinationMain /> },
 ];
 
 const AppNavigation = () => {

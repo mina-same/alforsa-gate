@@ -249,7 +249,7 @@ export default function AddContactModal({
 
         {/* Mode Toggle Buttons */}
         <div className="px-6 pb-4 border-b border-xon-surface-outline flex-shrink-0">
-          <div className={cn("flex gap-2", isRTL && "flex-row-reverse")}>
+          <div className={cn("flex gap-2", isRTL && "flex-rwow")}>
             <Button
               variant={mode === "existing" ? "default" : "outline"}
               onClick={() => setMode("existing")}

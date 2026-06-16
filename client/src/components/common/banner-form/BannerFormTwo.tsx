@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Flatpickr from 'react-flatpickr';
 
 interface DataType {
@@ -7,31 +8,20 @@ interface DataType {
    count: number
 }
 
-const guest_data: DataType[] = [
-   {
-      id: 1,
-      title: "Rooms",
-      count: 0
-   },
-   {
-      id: 2,
-      title: "Adults",
-      count: 0
-   },
-   {
-      id: 3,
-      title: "Children",
-      count: 0
-   },
-];
-
 const BannerFormTwo = () => {
+   const { t } = useTranslation();
+
+   const guest_data: DataType[] = [
+      { id: 1, title: t('banner_form.rooms'), count: 0 },
+      { id: 2, title: t('banner_form.adults'), count: 0 },
+      { id: 3, title: t('banner_form.children'), count: 0 },
+   ];
 
    const [location, setLocation] = useState(false);
    const [checkInDate, setCheckInDate] = useState<Date | Date[]>(new Date());
    const [checkOutDate, setCheckOutDate] = useState<Date | Date[]>(new Date());
    const [guest, setGuest] = useState(false);
-   const [guestCounts, setGuestCounts] = useState<DataType[]>(guest_data);
+   const [guestCounts, setGuestCounts] = useState<DataType[]>(() => guest_data);
 
    const locationRef = useRef<HTMLDivElement>(null);
    const guestRef = useRef<HTMLDivElement>(null);
@@ -80,10 +70,9 @@ const BannerFormTwo = () => {
       <form onSubmit={(e) => e.preventDefault()}>
          <div className="tg-booking-form-input-group d-flex align-items-end justify-content-between">
             <div className="tg-booking-form-parent-inner tg-hero-quantity p-relative mr-15 mb-10">
-            <span className="tg-booking-form-title mb-5">Check in:</span>
-               {/* <span className="tg-booking-form-title mb-5">Destinations:</span> */}
+            <span className="tg-booking-form-title mb-5">{t('banner_form.check_in')}</span>
                <div ref={locationRef} onClick={() => setLocation((prev) => !prev)} className={`tg-booking-add-input-field tg-booking-quantity-toggle ${location ? "active" : ""} `}>
-                  <span className="tg-booking-title-value">Where are you going . . .</span>
+                  <span className="tg-booking-title-value">{t('banner_form.where_going')}</span>
                   <span className="location">
                      <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.3329 6.7071C12.3329 11.2324 6.55512 15.1111 6.55512 15.1111C6.55512 15.1111 0.777344 11.2324 0.777344 6.7071C0.777344 5.16402 1.38607 3.68414 2.46962 2.59302C3.55316 1.5019 5.02276 0.888916 6.55512 0.888916C8.08748 0.888916 9.55708 1.5019 10.6406 2.59302C11.7242 3.68414 12.3329 5.16402 12.3329 6.7071Z" stroke="currentColor" strokeWidth="1.15556" strokeLinecap="round" strokeLinejoin="round" />
@@ -117,7 +106,7 @@ const BannerFormTwo = () => {
                </div>
             </div>
             <div className="tg-booking-form-parent-inner mr-15 mb-15">
-               <span className="tg-booking-form-title mb-5">Check in:</span>
+               <span className="tg-booking-form-title mb-5">{t('banner_form.check_in')}</span>
                <div className="tg-booking-add-input-date p-relative">
                   <span>
                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -137,7 +126,7 @@ const BannerFormTwo = () => {
                </div>
             </div>
             <div className="tg-booking-form-parent-inner mr-15  mb-15">
-               <span className="tg-booking-form-title mb-5">Check Out:</span>
+               <span className="tg-booking-form-title mb-5">{t('banner_form.check_out')}</span>
                <div className="tg-booking-add-input-date p-relative">
                   <span>
                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +146,7 @@ const BannerFormTwo = () => {
                </div>
             </div>
             <div className="tg-booking-form-parent-inner tg-hero-quantity p-relative mr-15 mb-15">
-               <span className="tg-booking-form-title mb-5">Guest:</span>
+               <span className="tg-booking-form-title mb-5">{t('banner_form.guest')}</span>
                <div ref={guestRef} onClick={() => setGuest((prev) => !prev)} className={`tg-booking-add-input-field tg-booking-quantity-toggle ${guest ? "active" : ""}`}>
                   <span className="location">
                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -171,7 +160,7 @@ const BannerFormTwo = () => {
                         </defs>
                      </svg>
                   </span>
-                  <span className="tg-booking-title-value">+ Add Guests</span>
+                  <span className="tg-booking-title-value">{t('banner_form.add_guests')}</span>
                </div>
                <div className={`tg-booking-form-location-list tg-quantity tg-booking-quantity-active ${guest ? "tg-list-open" : ""}`}>
                   <ul>
@@ -196,12 +185,12 @@ const BannerFormTwo = () => {
                      ))}
                   </ul>
                   <div className="tg-booking-form-search-btn mt-15 ">
-                     <button className="bk-search-button bk-search-button-2 w-100" type="submit">Ok</button>
+                     <button className="bk-search-button bk-search-button-2 w-100" type="submit">{t('banner_form.ok')}</button>
                   </div>
                </div>
             </div>
             <div className="tg-booking-form-search-btn mb-10">
-               <button className="bk-search-button" type="submit">Search
+               <button className="bk-search-button" type="submit">{t('banner_form.search')}
                   <span className="ml-5">
                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_53_103)">

@@ -1,8 +1,9 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
+import { useTranslation } from 'react-i18next';
 import testi_data from '../../../data/TestimonialData';
 
-const setting = {
+const sliderSettings = {
    spaceBetween: 25,
    loop: true,
    speed: 500,
@@ -14,21 +15,11 @@ const setting = {
    },
    navigation: false,
    breakpoints: {
-      '1200': {
-         slidesPerView: 3,
-      },
-      '992': {
-         slidesPerView: 2,
-      },
-      '768': {
-         slidesPerView: 2,
-      },
-      '576': {
-         slidesPerView: 1,
-      },
-      '0': {
-         slidesPerView: 1,
-      },
+      '1200': { slidesPerView: 3 },
+      '992':  { slidesPerView: 2 },
+      '768':  { slidesPerView: 2 },
+      '576':  { slidesPerView: 1 },
+      '0':    { slidesPerView: 1 },
    },
 };
 
@@ -37,6 +28,9 @@ interface StyleType {
 }
 
 const Testimonial = ({ style }: StyleType) => {
+   const { t, i18n } = useTranslation();
+   const isRtl = i18n.language?.startsWith('ar');
+
    return (
       <div className={`tg-testimonial-area tg-grey-bg pt-130 pb-110 p-relative z-index-1 ${style ? "" : "mt-35"}`}>
          <img className="tg-testimonial-2-shape p-absolute" src="/assets/img/testimonial/tower.png" alt="" />
@@ -45,24 +39,34 @@ const Testimonial = ({ style }: StyleType) => {
             <div className="row">
                <div className="col-lg-12">
                   <div className="tg-location-section-title text-center mb-30">
-                     <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">Clients Feedback About Us</h5>
-                     <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".5s" data-wow-duration=".9s">See Those Lovely Words From Clients</h2>
-                     <p className="text-capitalize wow fadeInUp" data-wow-delay=".6s" data-wow-duration=".9s">Are you tired of the typical tourist destinations and looking<br />
-                        to step out of your comfort zonetravel</p>
+                     <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">{t('home4.clients_feedback')}</h5>
+                     <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".5s" data-wow-duration=".9s">{t('home4.lovely_words')}</h2>
+                     <p className="text-capitalize wow fadeInUp" data-wow-delay=".6s" data-wow-duration=".9s">{t('home4.feedback_desc')}</p>
                   </div>
                </div>
-               <Swiper {...setting} modules={[Autoplay, Pagination]} wrapperClass="mb-40" className="swiper-container tg-testimonial-slider p-relative fix">
+               <Swiper
+                  {...sliderSettings}
+                  dir={isRtl ? 'rtl' : 'ltr'}
+                  key={isRtl ? 'rtl' : 'ltr'}
+                  modules={[Autoplay, Pagination]}
+                  wrapperClass="mb-40"
+                  className="swiper-container tg-testimonial-slider p-relative fix"
+               >
                   {testi_data.filter((items) => items.page === "home_2").map((item) => (
                      <SwiperSlide key={item.id} className="swiper-slide">
                         <div className="tg-testimonial-item mb-30">
                            <div className="tg-testimonial-avatar-top d-flex align-items-start justify-content-between">
-                              <div className="tg-testimonial-avatar-inner d-flex align-items-center mr-20 mb-20">
-                                 <div className="tg-testimonial-avatar-thumb mr-15">
+                              <div className="tg-testimonial-avatar-inner d-flex align-items-center mb-20" style={{ gap: '15px' }}>
+                                 <div className="tg-testimonial-avatar-thumb">
                                     <img className="rounded-circale" src={item.avatar} alt="avatar" />
                                  </div>
                                  <div className="tg-testimonial-avatar-content">
-                                    <h5>{item.name}</h5>
-                                    <span>{item.designation}</span>
+                                    <h5>{t(`home4.testimonials.${item.id}.name`)}</h5>
+                                    <span>{t(`home4.testimonials.${item.id}.designation`)}</span>
+                                    <span className="tg-testimonial-nationality">
+                                       <span className="tg-testimonial-flag">{item.flag}</span>
+                                       {t(`home4.testimonials.${item.id}.nationality`)}
+                                    </span>
                                  </div>
                               </div>
                               <div className="tg-testimonial-avatar-qoute">
@@ -73,7 +77,7 @@ const Testimonial = ({ style }: StyleType) => {
                                  </span>
                               </div>
                            </div>
-                           <p className="tg-testimonial-avatar-para mb-10">{item.desc}</p>
+                           <p className="tg-testimonial-avatar-para mb-10">{t(`home4.testimonials.${item.id}.desc`)}</p>
                            <div className="tg-testimonial-ratings">
                               <span><i className="fa-sharp fa-solid fa-star"></i></span>
                               <span><i className="fa-sharp fa-solid fa-star"></i></span>

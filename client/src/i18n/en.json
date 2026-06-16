@@ -108,6 +108,121 @@
       "total_cost": "Total Cost:", "book_now": "Book now"
     }
   },
+  "home4": {
+    "hero_title": "Let's Discover The World !",
+    "most_popular": "Most Popular Tour Packages",
+    "best_destination": "Our Best Destination",
+    "destination_desc": "Are you tired of the typical tourist destinations and looking to step out of your comfort zone travel",
+    "coming_soon": "Coming Soon",
+    "seats_remaining": "Seats Remaining",
+    "destinations": {
+      "russia": "Russia",
+      "california": "California",
+      "spain": "Spain",
+      "bali": "Bali"
+    },
+    "listing_subtitle": "Most Popular Tour Packages",
+    "listing_title": "Something Amazing Waiting For You",
+    "listing_desc": "Are you tired of the typical tourist destinations and looking to step out of your comfort zone travel",
+    "see_all": "See All Tours",
+    "per_person": "/Person",
+    "featured": "Featured",
+    "from": "From",
+    "price_on_request": "Price on request",
+    "reviews": "Reviews",
+    "loading_tours": "Loading tours…",
+    "no_tours": "No tours available right now.",
+    "process_subtitle": "Next Adventure Destination",
+    "process_title": "Why You Should Work With Us",
+    "process_desc": "Are you tired of the typical tourist destinations and looking to step out of your comfort zone travel",
+    "process_items": {
+      "1": { "title": "Best Travel Agency", "desc": "We offer the finest travel experiences and best tour packages tailored just for you." },
+      "2": { "title": "Secure Journey With Us", "desc": "We guarantee a safe and comfortable trip with the highest standards of quality and professionalism." },
+      "3": { "title": "Top Class Places", "desc": "We take you to the most beautiful destinations and finest places around the world." }
+    },
+    "counter": {
+      "happy_clients": "Happy Clients",
+      "country_tour": "Country Tour",
+      "tourism_award": "Tourism Award",
+      "skilled_support": "Skilled Support"
+    },
+    "tag_tours": "01 Tours",
+    "tag_hotels": "02 Hotels",
+    "tag_flights": "03 flights",
+    "clients_feedback": "Clients Feedback About Us",
+    "lovely_words": "See Those Lovely Words From Clients",
+    "feedback_desc": "Are you tired of the typical tourist destinations and looking to step out of your comfort zone travel",
+    "testimonials": {
+      "1": {
+        "name": "Esther Howard",
+        "designation": "CEO, Traveller",
+        "nationality": "American",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "2": {
+        "name": "Floyd Miles",
+        "designation": "CEO, Traveller",
+        "nationality": "British",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "3": {
+        "name": "Jacob Jones",
+        "designation": "CEO, Traveller",
+        "nationality": "Australian",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "4": {
+        "name": "Floyd Miles",
+        "designation": "CEO, Traveller",
+        "nationality": "British",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "5": {
+        "name": "Ahmed Al-Rashid",
+        "designation": "Business Owner",
+        "nationality": "Saudi",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "6": {
+        "name": "Sarah Johnson",
+        "designation": "Travel Blogger",
+        "nationality": "Canadian",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "7": {
+        "name": "Hans Mueller",
+        "designation": "Entrepreneur",
+        "nationality": "German",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      },
+      "8": {
+        "name": "Claire Dupont",
+        "designation": "Photographer",
+        "nationality": "French",
+        "desc": "Morem ipsum dolor siterey amet mean earty areaeey consec taetur adipisrvice ollwing ipsum dolor consectetur."
+      }
+    }
+  },
+  "home3": {
+    "most_popular": "Most Popular Tour Packages",
+    "section_title": "Something Amazing Waiting For you",
+    "per_person": "/Person"
+  },
+  "banner_form": {
+    "tours": "Tours",
+    "hotels": "Hotels",
+    "flights": "flights",
+    "where_going": "Where are you going . . .",
+    "check_in": "Check in:",
+    "check_out": "Check Out:",
+    "guest": "Guest:",
+    "add_guests": "+ Add Guests",
+    "rooms": "Rooms",
+    "adults": "Adults",
+    "children": "Children",
+    "search": "Search",
+    "ok": "Ok"
+  },
   "lang": {
     "en": "English",
     "ar": "Arabic",
