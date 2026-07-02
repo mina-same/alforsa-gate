@@ -196,11 +196,11 @@ export default function AdminUserForm({ userId, onSaved, onCancel }: Props) {
                     className={cn(
                       'text-left p-4 rounded-xl border-2 transition-all',
                       form.role === r.value
-                        ? 'border-[#560ce3] bg-[#560ce3]/5'
+                        ? 'border-[#1490a8] bg-[#1490a8]/5'
                         : 'border-gray-200 hover:border-gray-300 bg-white'
                     )}
                   >
-                    <p className={cn('font-semibold text-sm', form.role === r.value ? 'text-[#560ce3]' : 'text-gray-800')}>
+                    <p className={cn('font-semibold text-sm', form.role === r.value ? 'text-[#1490a8]' : 'text-gray-800')}>
                       {r.label}
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5 leading-snug">{r.description}</p>

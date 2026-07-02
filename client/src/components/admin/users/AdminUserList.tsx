@@ -102,7 +102,7 @@ export default function AdminUserList({ onAdd, onEdit }: Props) {
         <select
           value={roleFilter}
           onChange={e => handleRole(e.target.value)}
-          className="h-9 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#560ce3]/30"
+          className="h-9 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1490a8]/30"
         >
           <option value="">All roles</option>
           <option value="admin">Admin</option>
@@ -143,7 +143,7 @@ export default function AdminUserList({ onAdd, onEdit }: Props) {
                       <div className="flex items-center gap-3">
                         <div className={cn(
                           'w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0',
-                          u.role === 'superadmin' ? 'bg-[#560ce3]' : 'bg-gray-400'
+                          u.role === 'superadmin' ? 'bg-[#1490a8]' : 'bg-gray-400'
                         )}>
                           {u.name.charAt(0).toUpperCase()}
                         </div>
@@ -159,7 +159,7 @@ export default function AdminUserList({ onAdd, onEdit }: Props) {
                     <td className="px-4 py-3">
                       <span className="flex items-center gap-1.5">
                         {u.role === 'superadmin'
-                          ? <ShieldCheck className="w-3.5 h-3.5 text-[#560ce3]" />
+                          ? <ShieldCheck className="w-3.5 h-3.5 text-[#1490a8]" />
                           : <Shield className="w-3.5 h-3.5 text-gray-400" />
                         }
                         <Badge variant={u.role === 'superadmin' ? 'purple' : 'outline'}>

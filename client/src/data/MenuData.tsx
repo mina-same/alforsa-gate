@@ -17,7 +17,7 @@ const menu_data: MenuItem[] = [
         id: 1,
         title: "Home",
         titleKey: "home",
-        link: "#",
+        link: "/",
         has_dropdown: false,
         sub_menus: [
             { link: "/", title: "Home One", titleKey: "home_one" },

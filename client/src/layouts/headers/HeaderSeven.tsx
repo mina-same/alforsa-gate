@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import Offcanvas from "./Menu/Offcanvas";
 import Sidebar from "./Menu/Sidebar";
-import HeaderCart from "./Menu/HeaderCart";
-import TotalCart from "./Menu/TotalCart";
+import HeaderWishlist from "./Menu/HeaderWishlist";
+import TotalWishlist from "./Menu/TotalWishlist";
 import UseSticky from "../../hooks/UseSticky";
-import CartIcon from "../../svg/CartIcon";
 import UserIcon from "../../svg/UserIcon";
+import Wishlist from "../../svg/home-one/Wishlist";
 
 const HeaderSeven = () => {
 
@@ -39,11 +39,11 @@ const HeaderSeven = () => {
                            <div className="tg-header-cart p-relative d-none d-xl-block">
                               <button className="cart-button">
                                  <span>
-                                    <CartIcon />
+                                    <Wishlist />
                                  </span>
-                                 <span className="tg-header-cart-count"><TotalCart /></span>
+                                 <span className="tg-header-cart-count"><TotalWishlist /></span>
                               </button>
-                              <HeaderCart />
+                              <HeaderWishlist />
                            </div>
                            <div className="tg-header-btn ml-20 d-none d-sm-block">
                               <Link className="tg-btn-header" to="/login">

@@ -114,7 +114,7 @@ const Listing = () => {
                         <div key={tour._id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".6s">
                            <div className="tg-listing-card-item tg-listing-2-card-item mb-25">
                               <div className="tg-listing-card-thumb tg-listing-2-card-thumb fix p-relative">
-                                 <Link to={`/tour/${slug}`}>
+                                 <Link to={`/${lang}/tour2/${slug}`}>
                                     <img className="tg-card-border w-100" src={thumb} alt={getText(tour.heading)} />
                                     {tour.isFeatured && (
                                        <span className="tg-listing-item-price-discount shape-3">
@@ -146,7 +146,7 @@ const Listing = () => {
                                     </div>
                                  </div>
                                  <h4 className="tg-listing-card-title">
-                                    <Link to={`/tour/${slug}`}>{getText(tour.heading)}</Link>
+                                    <Link to={`/${lang}/tour2/${slug}`}>{getText(tour.heading)}</Link>
                                  </h4>
                                  <div className="tg-listing-card-review mb-5" style={{ display: 'flex', alignItems: 'center', gap: '2px', flexDirection: isRtl ? 'row-reverse' : 'row' }}>
                                     <span className="tg-listing-rating-icon"><i className="fa-sharp fa-solid fa-star"></i></span>

@@ -87,7 +87,22 @@
       "faq": "الأسئلة الشائعة",
       "leave_review": "اكتب تقييماً",
       "related_tours": "جولات ذات صلة",
-      "video_reviews": "مراجعات فيديو"
+      "video_reviews": "مراجعات فيديو",
+      "tour_gallery": "معرض الجولة",
+      "schedule": "جدول الرحلات ومواعيد المغادرة"
+    },
+    "pdf": {
+      "download": "تحميل PDF الجولة",
+      "generating": "جاري إنشاء الملف...",
+      "company": "الفرصة جيت"
+    },
+    "popular": {
+      "subtitle": "أشهر باقات الجولات السياحية",
+      "title": "جولاتنا الأكثر شعبية",
+      "see_all": "عرض كل الجولات",
+      "check_availability": "تحقق من التوفر",
+      "from": "يبدأ من",
+      "per_person": "/ شخص"
     },
     "pricing": { "group_size": "حجم المجموعة", "price_per_person": "السعر / شخص", "solo": "فردي", "pax_2_4": "٢–٤ أفراد", "pax_5_8": "٥–٨ أفراد", "pax_9_16": "٩–١٦ فرد" },
     "review": {
@@ -105,7 +120,18 @@
       "children": "أطفال", "children_age": "(أقل من ١٣)",
       "add_extra": "إضافات:",
       "service_per_booking": "خدمة لكل حجز", "service_per_person": "خدمة لكل شخص",
-      "total_cost": "التكلفة الإجمالية:", "book_now": "احجز الآن"
+      "total_cost": "التكلفة الإجمالية:", "book_now": "احجز الآن",
+      "your_details": "بياناتك",
+      "your_name": "الاسم الكامل", "your_email": "البريد الإلكتروني",
+      "your_phone": "رقم الهاتف", "notes": "طلبات خاصة",
+      "submitting": "جارٍ الإرسال…",
+      "booking_error": "فشل الإرسال. يرجى المحاولة مرة أخرى.",
+      "booking_success_title": "تم إرسال الحجز!",
+      "booking_success_body": "استلمنا طلبك وسنتواصل معك قريباً لتأكيده.",
+      "error_date": "اختر تاريخ السفر",
+      "error_pax": "اختر تذكرة واحدة على الأقل",
+      "error_name": "الاسم مطلوب",
+      "error_email": "البريد الإلكتروني غير صحيح"
     }
   },
   "home4": {

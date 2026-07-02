@@ -1,17 +1,21 @@
-import FooterSix from "../../../layouts/footers/FooterSix"
+import { useTranslation } from "react-i18next"
+import FooterThree from "../../../layouts/footers/FooterThree"
 import HeaderFour from "../../../layouts/headers/HeaderFour"
 import BreadCrumb from "../../common/BreadCrumb"
 import BlogArea from "./BlogArea"
 
 const BlogOne = () => {
+   const { i18n } = useTranslation()
+   const isAr = i18n.language?.startsWith("ar")
+
    return (
       <>
          <HeaderFour />
          <main>
-            <BreadCrumb title="Blogs" sub_title="Blog" />
+            <BreadCrumb title={isAr ? "المدونة" : "Blogs"} sub_title={isAr ? "المدونة" : "Blog"} />
             <BlogArea />
          </main>
-         <FooterSix />
+         <FooterThree />
       </>
    )
 }

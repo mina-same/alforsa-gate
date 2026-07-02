@@ -1,20 +1,32 @@
 import { Link } from "react-router-dom";
-
-const tags: string[] = ["City Tour", "Hiking", "News", "Camping", "Social Media", "Travel", "Traffic",];
+import { useTranslation } from "react-i18next";
+import { RUSSIA_BLOGS } from "../../../data/russiaBlogsData";
 
 const Tags = () => {
-   return (
-      <div className="tg-blog-sidebar-tag tg-blog-sidebar-box">
-         <h5 className="tg-blog-sidebar-title mb-25">Tags</h5>
-         <div className="tg-blog-sidebar-tag-list">
-            <ul>
-               {tags.map((tag, i) => (
-                  <li key={i}><Link to="#">{tag}</Link></li>
-               ))}
-            </ul>
-         </div>
-      </div>
-   )
-}
+  const { i18n } = useTranslation();
+  const lang = (i18n.language?.startsWith("ar") ? "ar" : "en") as "en" | "ar";
+  const prefix = lang === "ar" ? "/ar" : "/en";
 
-export default Tags
+  const allTags = Array.from(
+    new Set(RUSSIA_BLOGS.flatMap((b) => b.tags[lang]))
+  ).slice(0, 10);
+
+  return (
+    <div className="tg-blog-sidebar-tag tg-blog-sidebar-box">
+      <h5 className="tg-blog-sidebar-title mb-25">
+        {lang === "ar" ? "الوسوم" : "Tags"}
+      </h5>
+      <div className="tg-blog-sidebar-tag-list">
+        <ul>
+          {allTags.map((tag, i) => (
+            <li key={i}>
+              <Link to={`${prefix}/destination/russia`}>{tag}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Tags;

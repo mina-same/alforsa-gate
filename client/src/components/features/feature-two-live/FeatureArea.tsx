@@ -174,7 +174,7 @@ interface TourCardProps {
   getText: (obj: any) => string;
 }
 
-const TourCard = ({ tour, isListView, getText }: TourCardProps) => {
+const TourCard = ({ tour, isListView, lang, getText }: TourCardProps) => {
   const thumb = tour.images?.[0]?.url || "/assets/img/listing/placeholder.jpg";
   const slug  = tour.slug?.en || "";
 
@@ -200,7 +200,7 @@ const TourCard = ({ tour, isListView, getText }: TourCardProps) => {
 
         {/* Thumb */}
         <div className="tg-listing-card-thumb fix mb-15 p-relative" style={thumbStyle}>
-          <Link to={`/tour/${slug}`}>
+          <Link to={`/${lang}/tour2/${slug}`}>
             <img
               className="tg-card-border w-100"
               src={thumb}
@@ -224,7 +224,7 @@ const TourCard = ({ tour, isListView, getText }: TourCardProps) => {
 
             {/* Title */}
             <h4 className="tg-listing-card-title mb-8">
-              <Link to={`/tour/${slug}`}>{getText(tour.heading)}</Link>
+              <Link to={`/${lang}/tour2/${slug}`}>{getText(tour.heading)}</Link>
             </h4>
 
             {/* Meta row: location + duration */}

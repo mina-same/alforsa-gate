@@ -14,7 +14,9 @@
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "jest",
     "seed:admin": "ts-node -r tsconfig-paths/register src/scripts/seedAdmin.ts",
-    "seed:tour": "ts-node -r tsconfig-paths/register src/scripts/seedTour.ts"
+    "seed:tour": "ts-node -r tsconfig-paths/register src/scripts/seedTour.ts",
+    "seed:blogs": "ts-node -r tsconfig-paths/register src/scripts/seedBlogs.ts",
+    "seed:russia": "ts-node -r tsconfig-paths/register src/scripts/seedRussiaTour.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -24,8 +26,10 @@
     "@nestjs/mongoose": "^11.0.0",
     "@nestjs/passport": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/platform-socket.io": "^11.1.27",
     "@nestjs/swagger": "^11.0.0",
     "@nestjs/throttler": "^6.0.0",
+    "@nestjs/websockets": "^11.1.27",
     "axios": "^1.16.1",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
@@ -38,7 +42,8 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "slugify": "^1.6.6"
+    "slugify": "^1.6.6",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

@@ -63,7 +63,9 @@
             font-size: 14px;
             line-height: 1.71;
             text-transform: capitalize;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
     }
     &-title{

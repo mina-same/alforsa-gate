@@ -4,11 +4,11 @@ import { useState } from "react";
 import Offcanvas from "./Menu/Offcanvas";
 import Sidebar from "./Menu/Sidebar";
 import HeaderSearch from "./Menu/HeaderSearch";
-import HeaderCart from "./Menu/HeaderCart";
-import TotalCart from "./Menu/TotalCart";
+import HeaderWishlist from "./Menu/HeaderWishlist";
+import TotalWishlist from "./Menu/TotalWishlist";
 import UseSticky from "../../hooks/UseSticky";
 import SearchIcon from "../../svg/SearchIcon";
-import CartIconTwo from "../../svg/CartIconTwo";
+import Wishlist from "../../svg/home-one/Wishlist";
 
 const HeaderFive = () => {
 
@@ -43,11 +43,11 @@ const HeaderFive = () => {
                               <div className="tg-header-cart p-relative d-none d-xl-block">
                                  <button className="cart-button">
                                     <span>
-                                       <CartIconTwo />
+                                       <Wishlist />
                                     </span>
-                                    <span className="tg-header-cart-count"><TotalCart /></span>
+                                    <span className="tg-header-cart-count"><TotalWishlist /></span>
                                  </button>
-                                 <HeaderCart />
+                                 <HeaderWishlist />
                               </div>
                               <div className="tg-header-menu-bar lh-1 p-relative ml-10">
                                  <button onClick={() => setSidebar(true)} className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block">

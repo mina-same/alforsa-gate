@@ -31,6 +31,12 @@ export interface IGroupSize {
   remaining?: number;
 }
 
+export interface IExtra {
+  label: ILocalizedString;
+  price: ICurrencyPrice;
+  perPerson: boolean;
+}
+
 export interface INote {
   title: ILocalizedString;
   text: ILocalizedMixed;
@@ -100,6 +106,13 @@ export interface ITourDocument {
 export interface IRelatedTour {
   id: string;
   title: ILocalizedString;
+  slug?: ILocalizedString;
+  images?: IImage[];
+  priceStartingFrom?: ICurrencyPrice;
+  duration?: ILocalizedString;
+  tourLocation?: ILocalizedString;
+  averageRating?: number;
+  reviewsCount?: number;
 }
 
 // ==================== FULL TOUR TYPE ====================
@@ -130,6 +143,7 @@ export interface ITourFull {
   notes?: INote[];
   whatToPack?: ILocalizedMixed[];
   tourMapIframe?: string;
+  scheduleImage?: IImage;
   whatYouWillLoveHtml?: ILocalizedMixed;
   itinerary?: IItinerary;
   faqs?: IFAQ[];
@@ -137,8 +151,10 @@ export interface ITourFull {
   reviews?: IReview[];
   reviewsCount?: number;
   averageRating?: number;
+  extras?: IExtra[];
   groupSize?: IGroupSize;
   tourDocuments?: ITourDocument[];
+  tourVideos?: string[];
   isActive: boolean;
   isFeatured: boolean;
   viewCount: number;

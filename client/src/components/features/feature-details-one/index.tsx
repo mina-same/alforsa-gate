@@ -1,6 +1,7 @@
 import Breadcrumb from "./Breadcrumb"
 import FeatureDetailsArea from "./FeatureDetailsArea"
 import FeatureAboutArea from "./FeatureAboutArea"
+import PopularRelatedToursSection from "./about/PopularRelatedToursSection"
 import HeaderFour from "../../../layouts/headers/HeaderFour"
 import FooterSix from "../../../layouts/footers/FooterSix"
 import TourDetailSkeleton from "../../ui/TourDetailSkeleton"
@@ -11,7 +12,7 @@ const FeatureDetailsOne = () => {
 
   return (
     <>
-      <HeaderFour />
+      <HeaderFour isTransparent={true} />
       <main>
         {loading ? (
           <TourDetailSkeleton />
@@ -28,6 +29,7 @@ const FeatureDetailsOne = () => {
             <Breadcrumb />
             <FeatureDetailsArea />
             <FeatureAboutArea />
+            <PopularRelatedToursSection />
           </>
         )}
       </main>

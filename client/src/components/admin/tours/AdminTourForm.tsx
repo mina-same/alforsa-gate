@@ -28,12 +28,14 @@ type FaqItem           = { question: Loc; answer: Loc }
 type ReviewItem        = { type: 'youtube' | 'text' | 'video'; url?: string; title: Loc; content?: Loc }
 type RelatedTourItem   = { id: string; title: Loc }
 type NoteItem          = { title: Loc; text: Loc }
+type ExtraItem         = { label: Loc; price: Record<Currency, number>; perPerson: boolean }
 type ItineraryActivity = { heading: Loc; description: Loc; image?: TourImage }
 type ItineraryDay      = { day: number; title: Loc; description: Loc; activities: ItineraryActivity[] }
 
-const defaultLoc  = (): Loc           => ({ en: '', ar: '' })
-const defaultFaq  = (): FaqItem       => ({ question: defaultLoc(), answer: defaultLoc() })
-const defaultNote = (): NoteItem      => ({ title: defaultLoc(), text: defaultLoc() })
+const defaultLoc   = (): Loc       => ({ en: '', ar: '' })
+const defaultFaq   = (): FaqItem   => ({ question: defaultLoc(), answer: defaultLoc() })
+const defaultNote  = (): NoteItem  => ({ title: defaultLoc(), text: defaultLoc() })
+const defaultExtra = (): ExtraItem => ({ label: defaultLoc(), price: { EGP: 0, USD: 0, SAR: 0 }, perPerson: false })
 const defaultActivity = (): ItineraryActivity => ({ heading: defaultLoc(), description: defaultLoc() })
 const defaultDay  = (n: number): ItineraryDay => ({ day: n, title: defaultLoc(), description: defaultLoc(), activities: [] })
 const defaultReview = (): ReviewItem  => ({ type: 'text', title: defaultLoc(), content: defaultLoc() })
@@ -61,6 +63,7 @@ const defaultForm = () => ({
   whatToPack:         [] as Loc[],
   whatYouWillLoveHtml: defaultLoc(),
   tags:               { en: [], ar: [] } as { en: string[]; ar?: string[] },
+  extras:             [] as ExtraItem[],
   notes:              [] as NoteItem[],
   tourMapIframe:      '',
   faqs:               [] as FaqItem[],
@@ -69,6 +72,7 @@ const defaultForm = () => ({
   reviewsCount:       0,
   groupSize:          { total: 0, remaining: 0 },
   itinerary:          { generalDescription: defaultLoc(), days: [] as ItineraryDay[] },
+  tourVideos:         [] as string[],
   isActive:           true,
   isFeatured:         false,
 })
@@ -131,6 +135,23 @@ const normalizeLocArray = (raw: unknown): Loc[] => {
   if (raw && typeof raw === 'object') return [toLoc(raw)]
   if (typeof raw === 'string' && raw.trim()) return [{ en: raw, ar: '' }]
   return [defaultLoc()]
+}
+
+const normalizeExtras = (raw: unknown): ExtraItem[] => {
+  if (!Array.isArray(raw) || raw.length === 0) return []
+  return raw.map(e => {
+    const r = getRecord(e)
+    const p = getRecord(r.price)
+    return {
+      label:     toLoc(r.label),
+      price:     {
+        EGP: typeof p.EGP === 'number' ? p.EGP : 0,
+        USD: typeof p.USD === 'number' ? p.USD : 0,
+        SAR: typeof p.SAR === 'number' ? p.SAR : 0,
+      },
+      perPerson: r.perPerson === true,
+    }
+  })
 }
 
 const normalizeFaqs = (raw: unknown): FaqItem[] => {
@@ -216,8 +237,10 @@ const normalizeTourForm = (tour: unknown): FormData => {
     cancellationPolicy: toLoc(tourRecord.cancellationPolicy),
     faqs:              normalizeFaqs(tourRecord.faqs),
     relatedTours:      normalizeRelatedTours(tourRecord.relatedTours),
+    tourVideos:        Array.isArray(tourRecord.tourVideos) ? tourRecord.tourVideos.filter((v: unknown) => typeof v === 'string' && v) : [],
     reviews:           normalizeReviews(tourRecord.reviews),
     reviewsCount:      typeof tourRecord.reviewsCount === 'number' ? tourRecord.reviewsCount : 0,
+    extras:            normalizeExtras(tourRecord.extras),
     groupSize:         { ...base.groupSize, ...getRecord(tourRecord.groupSize) },
     itinerary:         normalizeItinerary(tourRecord.itinerary),
   }
@@ -983,6 +1006,66 @@ const AdminTourForm = ({ tourId, onSaved, onCancel }: Props) => {
                   </button>
                 </div>
               </div>
+
+              {/* Gallery Videos */}
+              <div className="atf-card">
+                <div className="atf-card__head">
+                  <h3>Gallery Videos</h3>
+                  <span style={{ fontSize: 11.5, fontWeight: 500, color: '#9ca3af' }}>YouTube URLs or video IDs shown in the gallery</span>
+                </div>
+                <div className="atf-card__body">
+                  {((form as FormData & { tourVideos?: string[] }).tourVideos ?? []).map((vid, i) => {
+                    const videos = (form as FormData & { tourVideos?: string[] }).tourVideos ?? []
+                    const ytId = vid.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/)?.[1] ?? vid
+                    return (
+                      <div key={i} className="atf-doc-item">
+                        <div className="atf-doc-item__icon">
+                          <PlaySquare size={16} />
+                        </div>
+                        <div className="atf-doc-item__fields" style={{ flex: 1 }}>
+                          <Field label="YouTube URL or Video ID">
+                            <TextInput
+                              value={vid}
+                              onChange={e => {
+                                const arr = [...videos]; arr[i] = e.target.value
+                                set('tourVideos', arr)
+                              }}
+                              placeholder="https://youtube.com/watch?v=… or video ID"
+                            />
+                          </Field>
+                          {ytId && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+                              <img
+                                src={`https://img.youtube.com/vi/${ytId}/default.jpg`}
+                                alt="thumbnail"
+                                style={{ width: 80, height: 56, objectFit: 'cover', borderRadius: 4, border: '1px solid #e5e7eb' }}
+                              />
+                              <span style={{ fontSize: 11, color: '#6b7280' }}>Preview</span>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className="atf-remove-btn"
+                          onClick={() => set('tourVideos', videos.filter((_, j) => j !== i))}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    )
+                  })}
+                  <button
+                    type="button"
+                    className="atf-add-btn"
+                    onClick={() => {
+                      const videos = (form as FormData & { tourVideos?: string[] }).tourVideos ?? []
+                      set('tourVideos', [...videos, ''])
+                    }}
+                  >
+                    <Plus size={13} /> Add video
+                  </button>
+                </div>
+              </div>
             </>
           )}
 
@@ -1066,6 +1149,83 @@ const AdminTourForm = ({ tourId, onSaved, onCancel }: Props) => {
                       </div>
                     </Field>
                   </div>
+                </div>
+              </div>
+
+              {/* Booking Extras / Add-ons */}
+              <div className="atf-card">
+                <div className="atf-card__head">
+                  <h3>Booking Extras</h3>
+                  <span style={{ fontSize: 11.5, fontWeight: 500, color: '#9ca3af' }}>Optional add-ons customers can select during booking</span>
+                </div>
+                <div className="atf-card__body">
+                  {form.extras.map((ex, i) => (
+                    <div key={i} className="atf-list-rte-item" style={{ alignItems: 'flex-end', gap: 10, marginBottom: 10 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <LInput
+                          label={i === 0 ? 'Label' : ''}
+                          value={ex.label}
+                          lang={lang}
+                          placeholder={lang === 'ar' ? 'اسم الخدمة الإضافية…' : 'e.g. Airport transfer'}
+                          onChange={v => {
+                            const arr = [...form.extras]
+                            arr[i] = { ...arr[i], label: v }
+                            set('extras', arr)
+                          }}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                        {CURRENCIES.map(c => (
+                          <div key={c} style={{ width: 80 }}>
+                            {i === 0 && (
+                              <span style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#6b7280', marginBottom: 5 }}>
+                                {CURRENCY_META[c].flag} {c}
+                              </span>
+                            )}
+                            <TextInput
+                              type="number"
+                              min="0"
+                              placeholder="0"
+                              value={ex.price[c] || ''}
+                              onChange={e => {
+                                const arr = [...form.extras]
+                                arr[i] = { ...arr[i], price: { ...arr[i].price, [c]: Number(e.target.value) } }
+                                set('extras', arr)
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: '#374151', whiteSpace: 'nowrap', paddingBottom: 8, cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={ex.perPerson}
+                          style={{ width: 14, height: 14, accentColor: '#560CE3', cursor: 'pointer' }}
+                          onChange={e => {
+                            const arr = [...form.extras]
+                            arr[i] = { ...arr[i], perPerson: e.target.checked }
+                            set('extras', arr)
+                          }}
+                        />
+                        Per person
+                      </label>
+                      <button
+                        type="button"
+                        className="atf-remove-btn"
+                        style={{ marginBottom: 4 }}
+                        onClick={() => set('extras', form.extras.filter((_, j) => j !== i))}
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="atf-add-btn"
+                    onClick={() => set('extras', [...form.extras, defaultExtra()])}
+                  >
+                    <Plus size={13} /> Add extra
+                  </button>
                 </div>
               </div>
 

@@ -47,7 +47,7 @@ const Counter = () => {
                {counter_data.map((item) => (
                   <div key={item.id} className="col-lg-3 col-md-6 col-sm-6  mb-30">
                      <div className="tg-counter-item tg-counter-2-item d-flex align-items-center">
-                        <span className="tg-counter-icon d-inline-block mr-20">
+                        <span className="tg-counter-icon d-inline-block mr-20" style={{ color: "var(--tg-theme-primary)" }}>
                            {item.icon}
                         </span>
                         <div className="tg-counter-content p-relative">

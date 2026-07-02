@@ -13,7 +13,7 @@ const HeaderTwoTop = () => {
                   <div className="tg-header-top-info d-flex align-items-center">
                      <Link to="https://www.google.com/maps/@41.6758525,-86.2531698,18.17z"><i className="mr-5 fa-regular fa-location-dot"></i> 178 makr street, 8007 Australia</Link>
                      <span className="tg-header-dvdr mr-20 ml-20"></span>
-                     <Link to="mailto:info@tourex.com"><i className="mr-5 fa-regular fa-envelope"></i> info@tourex.com</Link>
+                     <Link to="mailto:info@alforsagate.com"><i className="mr-5 fa-regular fa-envelope"></i> info@alforsagate.com</Link>
                   </div>
                </div>
                <div className="col-lg-6">

@@ -30,9 +30,17 @@ export interface ISEO { metaTitle?: ILocalizedString; metaDescription?: ILocaliz
 
 // ---- Sub-schemas ----
 
+export interface IExtra { label: ILocalizedString; price: ICurrencyPrice; perPerson: boolean; }
+
+const CurrencyPriceSchema = new MongooseSchema({ EGP: { type: Number, min: 0 }, USD: { type: Number, min: 0 }, SAR: { type: Number, min: 0 } }, { _id: false });
 const NoteSchema = new MongooseSchema({ title: { type: LocalizedStringSchema, required: true }, text: { type: LocalizedMixedSchema, required: true } }, { _id: false });
 const DescriptionSchema = new MongooseSchema({ header: { type: LocalizedStringSchema, required: true }, text: { type: LocalizedMixedSchema, required: true } }, { _id: false });
-const CurrencyPriceSchema = new MongooseSchema({ EGP: { type: Number, min: 0 }, USD: { type: Number, min: 0 }, SAR: { type: Number, min: 0 } }, { _id: false });
+
+const ExtraSchema = new MongooseSchema({
+  label:     { type: LocalizedStringSchema, required: true },
+  price:     { type: CurrencyPriceSchema, required: true },
+  perPerson: { type: Boolean, default: false },
+}, { _id: false });
 const GroupSizeSchema = new MongooseSchema({ total: { type: Number, default: 0, min: 0 }, remaining: { type: Number, default: 0, min: 0 } }, { _id: false });
 const TourDocumentSchema = new MongooseSchema({ url: { type: String, required: true, trim: true }, label: { type: LocalizedStringSchema, required: true } }, { _id: false });
 const PricesSchema = new MongooseSchema({ solo: CurrencyPriceSchema, pax_2_4: CurrencyPriceSchema, pax_5_8: CurrencyPriceSchema, pax_9_16: CurrencyPriceSchema }, { _id: false });
@@ -111,6 +119,7 @@ export class Tour {
 
   @Prop({ type: String, trim: true }) tourMapIframe: string;
   @Prop({ type: MapSchemaSchema }) mapSchema: any;
+  @Prop({ type: ImageSchema }) scheduleImage: IImage;
   @Prop({ type: LocalizedMixedSchema }) whatYouWillLoveHtml: ILocalizedMixed;
   @Prop({ type: ItinerarySchema }) itinerary: IItinerary;
 
@@ -122,6 +131,7 @@ export class Tour {
   @Prop({ default: 0, min: 0 }) reviewsCount: number;
   @Prop({ default: 0, min: 0, max: 5 }) averageRating: number;
   @Prop({ type: GroupSizeSchema }) groupSize: IGroupSize;
+  @Prop({ type: [ExtraSchema], default: [] }) extras: IExtra[];
   @Prop({ type: [TourDocumentSchema], default: [] }) tourDocuments: ITourDocument[];
   @Prop({ type: SEOSchema }) seo: ISEO;
 

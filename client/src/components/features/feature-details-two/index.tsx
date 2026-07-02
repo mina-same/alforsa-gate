@@ -3,9 +3,9 @@ import TourDetailsArea from './TourDetailsArea';
 import TourAboutDetails from './TourAboutDetails';
 import Listing from './Listing';
 import HeaderFour from '../../../layouts/headers/HeaderFour';
-import FooterFive from '../../../layouts/footers/FooterFive';
 import TourDetailSkeleton from '../../ui/TourDetailSkeleton';
 import { useTourDetails } from '../../../hooks/useTourDetails';
+import FooterThree from '@/layouts/footers/FooterThree';
 
 const FeatureDetailsTwo = () => {
   const { loading, error } = useTourDetails();
@@ -33,7 +33,7 @@ const FeatureDetailsTwo = () => {
           </>
         )}
       </main>
-      <FooterFive />
+      <FooterThree />
     </>
   );
 };

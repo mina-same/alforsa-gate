@@ -17,7 +17,7 @@ const RelatedToursSection = () => {
         {tour.relatedTours.map((rt) => (
           <div key={rt.id} className="col-md-4 col-sm-6">
             <Link
-              to={`${prefix}/tour/${rt.id}`}
+              to={`${prefix}/tour2/${rt.id}`}
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',

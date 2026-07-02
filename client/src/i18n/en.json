@@ -87,7 +87,22 @@
       "faq": "Frequently Asked Questions",
       "leave_review": "Leave a Reply",
       "related_tours": "Related Tours",
-      "video_reviews": "Video Reviews"
+      "video_reviews": "Video Reviews",
+      "tour_gallery": "Tour Gallery",
+      "schedule": "Flight Schedule & Departure Dates"
+    },
+    "pdf": {
+      "download": "Download Tour PDF",
+      "generating": "Generating PDF...",
+      "company": "Alforsa Gate"
+    },
+    "popular": {
+      "subtitle": "Most Popular Tour Packages",
+      "title": "Our Popular Tours",
+      "see_all": "See All Tours",
+      "check_availability": "Check Availability",
+      "from": "From",
+      "per_person": "/ Person"
     },
     "pricing": { "group_size": "Group Size", "price_per_person": "Price / Person", "solo": "Solo", "pax_2_4": "2–4 Pax", "pax_5_8": "5–8 Pax", "pax_9_16": "9–16 Pax" },
     "review": {
@@ -105,7 +120,18 @@
       "children": "Children", "children_age": "(under 13)",
       "add_extra": "Add Extra:",
       "service_per_booking": "Service per booking", "service_per_person": "Service per person",
-      "total_cost": "Total Cost:", "book_now": "Book now"
+      "total_cost": "Total Cost:", "book_now": "Book now",
+      "your_details": "Your Details",
+      "your_name": "Full Name", "your_email": "Email Address",
+      "your_phone": "Phone", "notes": "Special Requests",
+      "submitting": "Submitting…",
+      "booking_error": "Failed to submit. Please try again.",
+      "booking_success_title": "Booking Submitted!",
+      "booking_success_body": "We've received your request and will contact you shortly to confirm.",
+      "error_date": "Select a travel date",
+      "error_pax": "Select at least 1 ticket",
+      "error_name": "Name is required",
+      "error_email": "Valid email is required"
     }
   },
   "home4": {

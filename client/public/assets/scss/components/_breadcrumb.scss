@@ -71,6 +71,7 @@
                         margin: 0 3px;
                   }
                   & a{
+                        transition: color 0.3s ease;
                         &:hover{
                               color: var(--tg-common-black);
                         }
@@ -90,6 +91,7 @@
                               margin-right: 8px;
                               padding: 5px 0px;
                               & a{
+                                    transition: color 0.3s ease;
                                     &:hover{
                                           color: var(--tg-theme-primary);
                                     }
@@ -108,6 +110,7 @@
                               margin-right: 8px;
                               padding: 5px 0px;
                               & a{
+                                    transition: color 0.3s ease;
                                     &:hover{
                                           color: var(--tg-theme-primary);
                                     }
@@ -116,7 +119,7 @@
                                     color: var(--tg-grey-1);
                               }
                         }
-                  }  
+                  }
             }
             &-4{
                   & ul{
@@ -130,12 +133,13 @@
                               font-weight: 500;
                               padding: 5px 0px;
                               & a{
+                                    transition: color 0.3s ease;
                                     &:hover{
                                           color: var(--tg-grey-7);
                                     }
                               }
                         }
-                  }  
+                  }
             }
       }
 }

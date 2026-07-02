@@ -98,7 +98,7 @@ const FooterFive = () => {
             </div>
             <div className="tg-footer-copyright text-center">
                <span>
-                  Copyright <Link to="#">©Tourex</Link> |  All Right Reserved
+                  Copyright <Link to="#">©Alforsa Gate</Link> |  All Right Reserved
                </span>
             </div>
          </div>

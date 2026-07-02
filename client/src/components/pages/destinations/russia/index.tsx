@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import HeaderFour from "../../../../layouts/headers/HeaderFour";
 import FooterThree from "../../../../layouts/footers/FooterThree";
+import { RUSSIA_BLOGS } from "../../../../data/russiaBlogsData";
 
 // ─── Bilingual content ────────────────────────────────────────────────────────
 const CONTENT = {
@@ -52,6 +53,9 @@ const CONTENT = {
     visa:      { title: "Visa & Entry",        items: ["Saudi citizens require a visa", "E-Visa available: single-entry, 16 days", "Apply online in 4–7 business days", "Standard tourist visa via licensed operator", "Verify with Russian embassy before travel"] },
     payment:   { title: "Money & Payments",    items: ["Currency: Russian Ruble (₽)", "1 SAR ≈ 25–28 RUB (verify current rate)", "Visa/Mastercard have limited function", "Bring USD or EUR cash to exchange locally", "UnionPay cards work inside Russia"] },
     transport: { title: "Getting Around",      items: ["Metro: best for Moscow & St. Petersburg", "Sapsan train: Moscow ↔ St. Pete in 4 hrs", "Yandex Go (like Uber) for taxis", "Domestic flights for Siberia distances", "Trans-Siberian Railway for adventurers"] },
+    galleryTitle: "Russia Through the Lens", gallerySubtitle: "Photo Gallery",
+    blogTitle: "Russia Travel Stories", blogSubtitle: "Expert Tips & Inspiration",
+    blogReadMore: "Read Article",
     faqTitle: "Frequently Asked Questions", faqSubtitle: "Got Questions? We Have Answers.",
     ctaTitle: "Ready to Explore Russia?",
     ctaText: "Our expert team crafts tailor-made Russia itineraries for Saudi & Gulf travelers — from first-time visitors to seasoned explorers.",
@@ -101,6 +105,9 @@ const CONTENT = {
     visa:      { title: "التأشيرة والدخول",  items: ["المواطنون السعوديون يحتاجون تأشيرة", "تأشيرة إلكترونية: دخولة واحدة لمدة 16 يوماً", "التقديم أونلاين في 4–7 أيام عمل", "تأشيرة سياحية عبر وكالة معتمدة", "تحقق من السفارة الروسية قبل السفر"] },
     payment:   { title: "العملة والمدفوعات", items: ["العملة: الروبل الروسي (₽)", "1 ريال ≈ 25–28 روبل (تحقق من السعر الحالي)", "بطاقات فيزا وماستركارد محدودة الاستخدام", "احضر دولارات أو يوروهات نقداً للصرف", "بطاقات يونيون باي تعمل داخل روسيا"] },
     transport: { title: "التنقل داخل روسيا", items: ["المترو: الأفضل في موسكو وسانت بطرسبرغ", "قطار سابسان: موسكو ↔ سانت بطرسبرغ في 4 ساعات", "تطبيق يانديكس Go للتاكسي", "رحلات جوية داخلية للمسافات السيبيرية", "قطار عبر سيبيريا للمغامرين"] },
+    galleryTitle: "روسيا من خلال العدسة", gallerySubtitle: "معرض الصور",
+    blogTitle: "قصص السفر إلى روسيا", blogSubtitle: "نصائح وإلهام من الخبراء",
+    blogReadMore: "اقرأ المقال",
     faqTitle: "الأسئلة الشائعة", faqSubtitle: "عندك سؤال؟ عندنا الجواب.",
     ctaTitle: "مستعد لاكتشاف روسيا؟",
     ctaText: "فريقنا المتخصص يصمم برامج سياحية مخصصة لروسيا للمسافرين السعوديين والخليجيين — من المبتدئين إلى المخضرمين.",
@@ -175,6 +182,16 @@ const JSON_LD = JSON.stringify({
   ],
 });
 
+const GALLERY = [
+  { src: "https://images.unsplash.com/photo-1513326738677-b964603b136d?w=900&q=80", span: "wide", alt: { en: "Red Square, Moscow", ar: "الميدان الأحمر، موسكو" } },
+  { src: "https://images.unsplash.com/photo-1548534786-0a56ce8d8f43?w=700&q=80", span: "tall", alt: { en: "The Kremlin", ar: "الكرملين" } },
+  { src: "https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?w=700&q=80", span: "normal", alt: { en: "Hermitage Museum", ar: "متحف الإرميتاج" } },
+  { src: "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=700&q=80", span: "normal", alt: { en: "Lake Baikal", ar: "بحيرة بايكال" } },
+  { src: "https://images.unsplash.com/photo-1568464333934-67a35f59c98b?w=700&q=80", span: "wide", alt: { en: "Peterhof Palace", ar: "قصر بيترهوف" } },
+  { src: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700&q=80", span: "normal", alt: { en: "Trans-Siberian Railway", ar: "قطار عبر سيبيريا" } },
+  { src: "https://images.unsplash.com/photo-1547448415-e9f5b28e570d?w=700&q=80", span: "normal", alt: { en: "Saint Basil's Cathedral", ar: "كاتدرائية القديس باسيل" } },
+];
+
 const PRIMARY = "var(--tg-theme-primary, #0a5c44)";
 const FOOD_COLORS = ["#e8f4f0", "#fdf3e8", "#eef0fd", "#fdeaea", "#e8f8ea", "#fdf7e8"];
 const FOOD_EMOJIS = ["🍲", "🥩", "🥞", "🥟", "🍢", "🍰"];
@@ -189,9 +206,19 @@ const RussiaDestination = () => {
   const dir = isRtl ? "rtl" : "ltr";
 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
 
   return (
     <>
+      <style>{`
+        .russia-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; gap: 12px; }
+        @media (max-width: 767px) {
+          .russia-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+          .russia-gallery > div[style*="span 2"] { grid-column: span 1 !important; }
+          .russia-gallery > div[style*="span 2"][style*="row"] { grid-row: span 1 !important; }
+        }
+      `}</style>
       <Helmet>
         <html lang={lang} dir={dir} />
         <title>{c.seoTitle}</title>
@@ -207,11 +234,11 @@ const RussiaDestination = () => {
         <script type="application/ld+json">{JSON_LD}</script>
       </Helmet>
 
-      <HeaderFour />
+      <HeaderFour isTransparent={true}/>
 
       <main>
         {/* ── HERO ── */}
-        <section style={{ minHeight: "90vh", display: "flex", alignItems: "center", position: "relative",
+        <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative",
           background: `linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.7) 100%), url('https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1920&q=80') center/cover no-repeat` }}>
           <div className="container">
             <div className="row justify-content-center">
@@ -385,6 +412,89 @@ const RussiaDestination = () => {
           </div>
         </section>
 
+        {/* ── GALLERY ── */}
+        <section className="tg-grey-bg pt-80 pb-50">
+          <div className="container">
+            <div className="col-12 text-center mb-40">
+              <h5 className="tg-section-subtitle mb-15">{c.gallerySubtitle}</h5>
+              <h2>{c.galleryTitle}</h2>
+            </div>
+            <div className="russia-gallery">
+              {GALLERY.map((img, i) => (
+                <div
+                  key={i}
+                  onClick={() => setLightbox(i)}
+                  style={{
+                    gridColumn: img.span === "wide" ? "span 2" : "span 1",
+                    gridRow: img.span === "tall" ? "span 2" : "span 1",
+                    borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative",
+                  }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt[lang]}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
+                    onMouseOver={(e: any) => { e.currentTarget.style.transform = "scale(1.06)"; }}
+                    onMouseOut={(e: any) => { e.currentTarget.style.transform = "scale(1)"; }}
+                    onError={(e: any) => { e.currentTarget.src = "/assets/img/destination/des.jpg"; }}
+                  />
+                  <div style={{
+                    position: "absolute", inset: 0, background: "rgba(0,0,0,0)", transition: "background 0.3s",
+                    display: "flex", alignItems: "flex-end", padding: 14,
+                  }}
+                    onMouseOver={(e: any) => { e.currentTarget.style.background = "rgba(0,0,0,0.35)"; }}
+                    onMouseOut={(e: any) => { e.currentTarget.style.background = "rgba(0,0,0,0)"; }}
+                  >
+                    <span style={{
+                      color: "#fff", fontSize: 12, fontWeight: 600, opacity: 0,
+                      transition: "opacity 0.3s", background: "rgba(0,0,0,0.5)",
+                      padding: "3px 10px", borderRadius: 100, backdropFilter: "blur(4px)",
+                    }}
+                      onMouseOver={(e: any) => { e.currentTarget.style.opacity = "1"; }}
+                    >
+                      {img.alt[lang]}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── LIGHTBOX ── */}
+        {lightbox !== null && (
+          <div
+            onClick={closeLightbox}
+            style={{
+              position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", zIndex: 9999,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+          >
+            <button
+              onClick={closeLightbox}
+              style={{
+                position: "absolute", top: 20, right: 24, background: "none", border: "none",
+                color: "#fff", fontSize: 32, cursor: "pointer", lineHeight: 1,
+              }}
+            >×</button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightbox((lightbox - 1 + GALLERY.length) % GALLERY.length); }}
+              style={{ position: "absolute", left: 20, background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", fontSize: 28, width: 48, height: 48, borderRadius: "50%", cursor: "pointer" }}
+            >‹</button>
+            <img
+              src={GALLERY[lightbox].src.replace("w=700", "w=1400").replace("w=900", "w=1400")}
+              alt={GALLERY[lightbox].alt[lang]}
+              onClick={(e) => e.stopPropagation()}
+              style={{ maxWidth: "90vw", maxHeight: "85vh", objectFit: "contain", borderRadius: 12 }}
+              onError={(e: any) => { e.currentTarget.src = "/assets/img/destination/des.jpg"; }}
+            />
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightbox((lightbox + 1) % GALLERY.length); }}
+              style={{ position: "absolute", right: 20, background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", fontSize: 28, width: 48, height: 48, borderRadius: "50%", cursor: "pointer" }}
+            >›</button>
+          </div>
+        )}
+
         {/* ── PRACTICAL INFO ── */}
         <section className="tg-grey-bg pt-80 pb-50">
           <div className="container">
@@ -439,6 +549,50 @@ const RussiaDestination = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── RUSSIA BLOGS ── */}
+        <section className="tg-grey-bg pt-80 pb-50">
+          <div className="container">
+            <div className="col-12 text-center mb-40">
+              <h5 className="tg-section-subtitle mb-15">{c.blogSubtitle}</h5>
+              <h2>{c.blogTitle}</h2>
+            </div>
+            <div className="row">
+              {RUSSIA_BLOGS.map((blog) => {
+                const langPrefix = lang === "ar" ? "/ar" : "/en";
+                return (
+                  <div key={blog.slug} className="col-xl-4 col-lg-6 col-md-6 mb-30">
+                    <div className="tg-blog-item tg-blog-2-item">
+                      <div className="tg-blog-thumb p-relative fix mb-20">
+                        <Link to={`${langPrefix}/russia-blog/${blog.slug}`}>
+                          <img className="w-100" src={blog.coverImage} alt={blog.title[lang]}
+                            onError={(e: any) => { e.currentTarget.src = "/assets/img/destination/des.jpg"; }} />
+                        </Link>
+                        <span className="tg-blog-tag p-absolute">{blog.tags[lang][0]}</span>
+                      </div>
+                      <div className="tg-blog-content p-relative">
+                        <h3 className="tg-blog-title">
+                          <Link to={`${langPrefix}/russia-blog/${blog.slug}`}>{blog.title[lang]}</Link>
+                        </h3>
+                        <div className="tg-blog-date mb-10">
+                          <span className="mr-20">
+                            <i className="fa-light fa-calendar"></i>
+                            {new Date(blog.publishedAt).toLocaleDateString(lang === "ar" ? "ar-SA" : "en-US", { year: "numeric", month: "short", day: "numeric" })}
+                          </span>
+                          <span>
+                            <i className="fa-regular fa-clock"></i>
+                            {blog.readTime} {lang === "ar" ? "دق قراءة" : "min read"}
+                          </span>
+                        </div>
+                        <p className="tg-blog-text mb-0">{blog.excerpt[lang]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

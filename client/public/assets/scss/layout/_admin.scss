@@ -3851,3 +3851,131 @@
         }
     }
 }
+
+
+// =====================
+// Admin Booking List (ABK)
+// =====================
+
+// Pending chip — amber (no existing modifier for it)
+.abk-chip--pending {
+    background: #fffbeb;
+    border-color: #fde68a;
+    strong { color: #92400e; }
+}
+
+// Booking ref cell
+.abk-ref {
+    font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: 0.02em;
+}
+
+// Customer info stack
+.abk-customer {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    &__name  { font-size: 13px; font-weight: 600; color: #111827; }
+    &__email { font-size: 11.5px; color: #6b7280; }
+    &__phone { font-size: 11px; color: #9ca3af; }
+}
+
+// Tour name cell
+.abk-tour-name {
+    font-size: 13px;
+    color: #374151;
+    max-width: 180px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Date + time stack
+.abk-date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    &__day  { font-size: 13px; font-weight: 500; color: #374151; white-space: nowrap; }
+    &__time { font-size: 11px; color: #9ca3af; }
+}
+
+// Pax count
+.abk-pax {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+}
+
+// Total amount
+.abk-amount {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #111827;
+}
+
+// Table min-width override for bookings (slightly narrower than tours)
+.abk-table {
+    min-width: 860px;
+}
+
+// Booking-specific action buttons
+.abk-action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.15s;
+    flex-shrink: 0;
+
+    svg {
+        width: 13px;
+        height: 13px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    &:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    &--confirm {
+        color: #15803d;
+
+        &:hover:not(:disabled) {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+    }
+
+    &--cancel {
+        color: #92400e;
+
+        &:hover:not(:disabled) {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+    }
+
+    &--reset {
+        color: #6b7280;
+
+        &:hover:not(:disabled) {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+            color: #374151;
+        }
+    }
+}

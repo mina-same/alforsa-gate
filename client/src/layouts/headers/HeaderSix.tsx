@@ -5,11 +5,11 @@ import Offcanvas from "./Menu/Offcanvas";
 import Sidebar from "./Menu/Sidebar";
 import HeaderSearch from "./Menu/HeaderSearch";
 import HeaderSixTop from "./Menu/HeaderSixTop";
-import TotalCart from "./Menu/TotalCart";
-import HeaderCart from "./Menu/HeaderCart";
+import TotalWishlist from "./Menu/TotalWishlist";
+import HeaderWishlist from "./Menu/HeaderWishlist";
 import UseSticky from "../../hooks/UseSticky";
-import CartIconTwo from "../../svg/CartIconTwo";
 import SearchIcon from "../../svg/SearchIcon";
+import Wishlist from "../../svg/home-one/Wishlist";
 
 const HeaderSix = () => {
 
@@ -46,11 +46,11 @@ const HeaderSix = () => {
                               <div className="tg-header-cart p-relative d-none d-xl-block">
                                  <button className="cart-button">
                                     <span>
-                                       <CartIconTwo />
+                                       <Wishlist />
                                     </span>
-                                    <span className="tg-header-cart-count"><TotalCart /></span>
+                                    <span className="tg-header-cart-count"><TotalWishlist /></span>
                                  </button>
-                                 <HeaderCart />
+                                 <HeaderWishlist />
                               </div>
                               <div className="tg-header-menu-bar lh-1 p-relative ml-10">
                                  <button onClick={() => setSidebar(true)} className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block">

@@ -6,6 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { ToursModule } from './tours/tours.module';
 import { UsersModule } from './users/users.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
+import { DestinationsModule } from './destinations/destinations.module';
+import { BlogsModule } from './blogs/blogs.module';
+import { ContactsModule } from './contacts/contacts.module';
+import { BookingsModule } from './bookings/bookings.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -28,6 +33,11 @@ import { WhatsAppModule } from './whatsapp/whatsapp.module';
     ToursModule,
     UsersModule,
     WhatsAppModule,
+    DestinationsModule,
+    BlogsModule,
+    ContactsModule,
+    BookingsModule,
+    EventsModule,
   ],
 })
 export class AppModule {}

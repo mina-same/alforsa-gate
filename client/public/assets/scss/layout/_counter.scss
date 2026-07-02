@@ -50,3 +50,10 @@
         }
     }
 }
+
+.tg-counter-icon {
+    svg path,
+    svg rect:not([fill="none"]) {
+        fill: var(--tg-theme-primary) !important;
+    }
+}

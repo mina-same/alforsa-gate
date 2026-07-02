@@ -11,7 +11,7 @@
 /* shadcn design tokens — scoped to admin */
 @layer base {
   .admin-scope {
-    --primary: #560ce3;
+    --primary: #1490a8;
     --primary-foreground: #ffffff;
     --muted: #f3f4f6;
     --muted-foreground: #6b7280;
@@ -21,6 +21,6 @@
     --accent: #f9fafb;
     --accent-foreground: #111827;
     --destructive: #ef4444;
-    --ring: #560ce3;
+    --ring: #1490a8;
   }
 }

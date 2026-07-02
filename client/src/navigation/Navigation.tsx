@@ -29,9 +29,13 @@ import RegisterMain from '../pages/RegisterMain';
 import BlogOneMain from '../pages/BlogOneMain';
 import BlogTwoMain from '../pages/BlogTwoMain';
 import BlogDetailsMain from '../pages/BlogDetailsMain';
+import BlogLiveMain from '../pages/BlogLiveMain';
+import BlogDetailSlugMain from '../pages/BlogDetailSlugMain';
 import ContactMain from '../pages/ContactMain';
 import ErrorMain from '../pages/ErrorMain';
+import DestinationMain from '../pages/DestinationMain';
 import RussiaDestinationMain from '../pages/RussiaDestinationMain';
+import RussiaBlogDetailMain from '../pages/RussiaBlogDetailMain';
 
 const localizedRoutes = [
   { path: '/', element: <HomeFourMain /> },
@@ -62,11 +66,15 @@ const localizedRoutes = [
   { path: '/faq', element: <FaqMain /> },
   { path: '/login', element: <LogInMain /> },
   { path: '/register', element: <RegisterMain /> },
+  { path: '/blog', element: <BlogLiveMain /> },
+  { path: '/blog/:slug', element: <BlogDetailSlugMain /> },
   { path: '/blog-grid', element: <BlogOneMain /> },
   { path: '/blog-standard', element: <BlogTwoMain /> },
   { path: '/blog-details', element: <BlogDetailsMain /> },
   { path: '/contact', element: <ContactMain /> },
-  { path: '/destination/russia', element: <RussiaDestinationMain /> },
+  { path: '/destination/russia',  element: <RussiaDestinationMain /> },
+  { path: '/destination/:slug',   element: <DestinationMain /> },
+  { path: '/russia-blog/:slug',   element: <RussiaBlogDetailMain /> },
 ];
 
 const AppNavigation = () => {
@@ -75,7 +83,11 @@ const AppNavigation = () => {
       <Routes>
         {/* Root redirect to /en */}
         <Route path="/" element={<Navigate to="/en" replace />} />
-        <Route path="/admin" element={<AdminDashboardMain />} />
+        <Route path="/admin/*" element={<AdminDashboardMain />} />
+        {/* Bare routes (no lang prefix) redirect to /en equivalent */}
+        {localizedRoutes.filter(r => r.path !== '/').map(({ path }) => (
+          <Route key={`bare${path}`} path={path} element={<Navigate to={`/en${path}`} replace />} />
+        ))}
         {/* English routes: /en and /en/... */}
         {localizedRoutes.map(({ path, element }) => (
           <Route key={`/en${path}`} path={`/en${path === '/' ? '' : path}`} element={element} />

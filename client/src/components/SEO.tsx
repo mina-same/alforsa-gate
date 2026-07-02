@@ -7,7 +7,7 @@ const SEO = ({ pageTitle }: any) => {
     <ErrorBoundary>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{pageTitle} Tourex - Tour & Travel Booking React js Template</title>
+        <title>{pageTitle} | Alforsa Gate</title>
         <meta name="robots" content="noindex, follow" />
         <meta name="description" content="Zibber - Consulting React Template" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />

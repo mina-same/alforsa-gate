@@ -10,9 +10,10 @@ import PricingPlansSection from '../feature-details-two/about/PricingPlansSectio
 import NotesSection from '../feature-details-two/about/NotesSection';
 import FAQSection from '../feature-details-two/about/FAQSection';
 import TourDocumentsSection from '../feature-details-two/about/TourDocumentsSection';
+import ScheduleSection from '../feature-details-two/about/ScheduleSection';
 import TagsSection from '../feature-details-two/about/TagsSection';
 import CancellationPolicySection from '../feature-details-two/about/CancellationPolicySection';
-import RelatedToursSection from '../feature-details-two/about/RelatedToursSection';
+import TourGallerySection from './about/TourGallerySection';
 import { useTranslation } from 'react-i18next';
 import { useTourDetails } from '../../../hooks/useTourDetails';
 import { getLang } from '../../../utils/getLang';
@@ -47,6 +48,9 @@ const FeatureAboutArea = () => {
                 {/* 5. Pricing plans */}
                 <PricingPlansSection />
 
+                {/* 5b. Flight schedule image */}
+                <ScheduleSection />
+
                 {/* 6. Important notes */}
                 <NotesSection />
 
@@ -56,7 +60,10 @@ const FeatureAboutArea = () => {
 
                 {/* 8. Map */}
                 <div className="tg-tour-about-map mb-40">
-                  <h4 className="tg-tour-about-title mb-15">{t('tour.sections.location')}</h4>
+                  <h4 className="tg-tour-about-title mb-15">
+                    <i className="fa-solid fa-location-dot mr-10 tg-tour-section-title-icon"></i>
+                    {t('tour.sections.location')}
+                  </h4>
                   {tour?.meetingPoint && (
                     <p className="text-capitalize lh-28">
                       {getLang(tour.meetingPoint, lang)}
@@ -75,6 +82,10 @@ const FeatureAboutArea = () => {
                     </div>
                   )}
                 </div>
+                <div className="tg-tour-about-border mb-40"></div>
+
+                {/* 8b. Gallery */}
+                <TourGallerySection />
                 <div className="tg-tour-about-border mb-40"></div>
 
                 {/* 9. Documents */}
@@ -97,10 +108,6 @@ const FeatureAboutArea = () => {
 
                 {/* 14. Leave a review form */}
                 <ReviewFormArea />
-
-                {/* 15. Related tours */}
-                <div className="tg-tour-about-border mb-45"></div>
-                <RelatedToursSection />
 
               </div>
             </div>
