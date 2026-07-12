@@ -21,8 +21,7 @@ const counter_data: DataType[] = [
 ];
 
 const Counter = () => {
-   const { t, i18n } = useTranslation();
-   const isRtl = i18n.language?.startsWith('ar');
+   const { t } = useTranslation();
    return (
       <div className="tg-counter-area tg-counter-su-2 pt-85 pb-55">
          <div className="container">

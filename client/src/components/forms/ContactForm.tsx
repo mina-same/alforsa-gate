@@ -32,7 +32,7 @@ const ContactForm = () => {
   const schema = yup.object({
     name:    yup.string().required().label(TX.name),
     email:   yup.string().required().email().label(TX.email),
-    website: yup.string().label(TX.website),
+    website: yup.string().default('').label(TX.website),
     message: yup.string().required().label(TX.comments),
   }).required();
 

@@ -560,7 +560,7 @@ const TourPDFView = forwardRef<HTMLDivElement, TourPDFViewProps>(
                 </div>
 
                 {/* Caption */}
-                <div style={{ fontSize: 9, color: C.gray ?? C.mid, textAlign: 'center', lineHeight: 1.4 }}>
+                <div style={{ fontSize: 9, color: C.mid, textAlign: 'center', lineHeight: 1.4 }}>
                   {rtl ? 'امسح بكاميرا هاتفك' : 'Scan with your phone camera'}
                 </div>
               </div>

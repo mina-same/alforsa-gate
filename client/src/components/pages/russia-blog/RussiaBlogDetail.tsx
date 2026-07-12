@@ -92,8 +92,8 @@ const QuoteIcon = () => (
 const renderSection = (
   section: BlogSection,
   i: number,
-  coverImage: string,
-  isRtl: boolean,
+  _coverImage: string,
+  _isRtl: boolean,
 ) => {
   switch (section.type) {
     case "paragraph":

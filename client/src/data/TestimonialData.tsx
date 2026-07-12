@@ -3,6 +3,9 @@ interface DataType {
    page: string;
    avatar: string;
    flag: string;
+   name?: string;
+   designation?: string;
+   desc?: string;
 }
 
 const testi_data: DataType[] = [
