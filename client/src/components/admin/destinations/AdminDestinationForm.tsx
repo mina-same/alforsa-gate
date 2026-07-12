@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { destinationService } from '../../../services/destinationService';
 import type { IDestination } from '../../../services/destinationService';
-import { LInput, LTextarea, Field, TextInput, TextArea } from '../AdminFormFields';
+import { LInput, LTextarea, Field, TextInput } from '../AdminFormFields';
 
 interface Props {
   destinationId?: string;

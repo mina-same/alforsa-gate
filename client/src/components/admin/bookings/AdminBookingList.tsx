@@ -256,7 +256,7 @@ const AdminBookingList = () => {
                               <X size={13} />
                             </button>
                           )}
-                          {b.status === 'confirmed' && b.status !== 'pending' && (
+                          {b.status === 'confirmed' && (
                             <button
                               className="abk-action-btn abk-action-btn--reset"
                               title="Reset to pending"

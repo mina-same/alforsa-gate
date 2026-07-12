@@ -10,7 +10,7 @@ interface Props {
   primaryColor: string;
 }
 
-const GallerySection = ({ items, title, subtitle, lang, primaryColor }: Props) => {
+const GallerySection = ({ items, title, subtitle, lang }: Props) => {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
