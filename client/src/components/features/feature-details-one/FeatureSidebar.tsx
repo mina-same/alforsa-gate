@@ -32,6 +32,8 @@ const FeatureSidebar = () => {
   const [submitting,    setSubmitting]    = useState(false);
   const [success,       setSuccess]       = useState(false);
   const [serverError,   setServerError]   = useState('');
+  const [showExtras,    setShowExtras]    = useState(false);
+  const [showOptional,  setShowOptional]  = useState(false);
 
   // Sync checked state length when tour extras load
   useEffect(() => {
@@ -132,7 +134,49 @@ const FeatureSidebar = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate className="bks-form">
+      <style>{`
+        @media (min-width: 992px) {
+          .bks-form { display: flex; flex-direction: column; max-height: calc(100vh - 190px); }
+          .bks-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin-right: -14px; padding-right: 14px; }
+          .bks-scroll { scrollbar-width: thin; scrollbar-color: #d1d5db transparent; }
+          .bks-scroll::-webkit-scrollbar { width: 5px; }
+          .bks-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 99px; }
+        }
+        .bks-footer { padding-top: 14px; border-top: 1px dashed #e5e7eb; }
+        .bks-section-toggle {
+          width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+          background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
+          padding: 10px 12px; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer;
+        }
+        .bks-section-toggle:hover { background: #f3f4f6; }
+        .bks-section-toggle svg { transition: transform .2s ease-out; flex-shrink: 0; }
+        .bks-section-toggle--open svg { transform: rotate(180deg); }
+
+        /* Customer-detail inputs (name / email / phone / special requests) */
+        .bks-form .bks-field { gap: 4px; margin-bottom: 8px; }
+        .bks-form .bks-field .input {
+          width: 100%;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          background: #fff;
+          padding: 8px 12px;
+          font-size: 13.5px;
+          line-height: 1.45;
+          color: #111827;
+          outline: none;
+          box-shadow: none;
+          transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .bks-form .bks-field .input:hover { border-color: #cbd5e1; }
+        .bks-form .bks-field .input:focus {
+          border-color: var(--tg-theme-primary, #560CE3);
+          box-shadow: 0 0 0 3px rgba(86, 12, 227, 0.08);
+        }
+        .bks-form .bks-field .input::placeholder { color: #9ca3af; opacity: 1; }
+        .bks-form .bks-field textarea.input { min-height: 64px; }
+      `}</style>
+
       <h4 className="tg-tour-about-title title-2 mb-15">{t('tour.sidebar.book_this_tour')}</h4>
 
       {total_spots > 0 && (
@@ -143,6 +187,8 @@ const FeatureSidebar = () => {
           {t('tour.sidebar.available_out_of')} {total_spots}
         </div>
       )}
+
+      <div className="bks-scroll">
 
       {/* Date */}
       <div className="tg-booking-form-parent-inner mb-10">
@@ -211,15 +257,31 @@ const FeatureSidebar = () => {
         {fieldErrors.pax && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>{fieldErrors.pax}</p>}
       </div>
 
-      {/* Extras — shown only when the tour has add-ons */}
+      {/* Extras — shown only when the tour has add-ons, collapsed by default */}
       {tourExtras.length > 0 && (
         <>
           <div className="tg-tour-about-border-doted mb-15"></div>
-          <div className="tg-tour-about-extra mb-10">
-            <span className="tg-tour-about-sidebar-title mb-10 d-inline-block">
-              {t('tour.sidebar.add_extra')}
-            </span>
-            <div className="tg-filter-list">
+          <div className="tg-tour-about-extra mb-15">
+            <button
+              type="button"
+              className={`bks-section-toggle${showExtras ? ' bks-section-toggle--open' : ''}`}
+              aria-expanded={showExtras}
+              onClick={() => setShowExtras(v => !v)}
+            >
+              <span>
+                {t('tour.sidebar.add_extra')}
+                {!showExtras && extraChecked.some(Boolean) && (
+                  <span style={{ fontWeight: 500, color: '#560CE3', marginLeft: 6 }}>
+                    ({extraChecked.filter(Boolean).length})
+                  </span>
+                )}
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            {showExtras && (
+            <div className="tg-filter-list" style={{ marginTop: 10 }}>
               <ul>
                 {tourExtras.map((ex, i) => (
                   <li key={i}>
@@ -259,6 +321,7 @@ const FeatureSidebar = () => {
                 )}
               </ul>
             </div>
+            )}
           </div>
         </>
       )}
@@ -307,41 +370,61 @@ const FeatureSidebar = () => {
           )}
         </div>
 
-        <div className="bks-field mb-10">
-          <label className="bks-field__label" htmlFor="bks-phone">
-            {t('tour.sidebar.your_phone')}
-            <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 4 }}>(optional)</span>
-          </label>
-          <input
-            id="bks-phone"
-            className="input"
-            type="tel"
-            autoComplete="tel"
-            placeholder="+1 234 567 8900"
-            value={customerPhone}
-            onChange={e => setCustomerPhone(e.target.value)}
-          />
-        </div>
+        <button
+          type="button"
+          className={`bks-section-toggle${showOptional ? ' bks-section-toggle--open' : ''}`}
+          aria-expanded={showOptional}
+          onClick={() => setShowOptional(v => !v)}
+        >
+          <span>
+            {t('tour.sidebar.your_phone')} / {t('tour.sidebar.notes')}
+            <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>(optional)</span>
+          </span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
 
-        <div className="bks-field mb-10">
-          <label className="bks-field__label" htmlFor="bks-notes">
-            {t('tour.sidebar.notes')}
-            <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 4 }}>(optional)</span>
-          </label>
-          <textarea
-            id="bks-notes"
-            className="input"
-            placeholder="Dietary requirements, accessibility needs…"
-            value={notes}
-            onChange={e => setNotes(e.target.value)}
-            rows={3}
-            style={{ resize: 'vertical' }}
-          />
-        </div>
+        {showOptional && (
+          <div style={{ marginTop: 10 }}>
+            <div className="bks-field mb-10">
+              <label className="bks-field__label" htmlFor="bks-phone">
+                {t('tour.sidebar.your_phone')}
+                <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 4 }}>(optional)</span>
+              </label>
+              <input
+                id="bks-phone"
+                className="input"
+                type="tel"
+                autoComplete="tel"
+                placeholder="+1 234 567 8900"
+                value={customerPhone}
+                onChange={e => setCustomerPhone(e.target.value)}
+              />
+            </div>
+
+            <div className="bks-field mb-10">
+              <label className="bks-field__label" htmlFor="bks-notes">
+                {t('tour.sidebar.notes')}
+                <span style={{ fontWeight: 400, color: '#9ca3af', marginLeft: 4 }}>(optional)</span>
+              </label>
+              <textarea
+                id="bks-notes"
+                className="input"
+                placeholder="Dietary requirements, accessibility needs…"
+                value={notes}
+                onChange={e => setNotes(e.target.value)}
+                rows={3}
+                style={{ resize: 'vertical' }}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="tg-tour-about-border-doted mb-15"></div>
+      </div>{/* /bks-scroll */}
 
+      <div className="bks-footer">
       {/* Total */}
       <div className="tg-tour-about-coast d-flex align-items-center flex-wrap justify-content-between mb-20">
         <span className="tg-tour-about-sidebar-title d-inline-block">{t('tour.sidebar.total_cost')}</span>
@@ -355,6 +438,7 @@ const FeatureSidebar = () => {
       <button type="submit" className="tg-btn tg-btn-switch-animation w-100" disabled={submitting}>
         {submitting ? t('tour.sidebar.submitting') : t('tour.sidebar.book_now')}
       </button>
+      </div>{/* /bks-footer */}
     </form>
   );
 };

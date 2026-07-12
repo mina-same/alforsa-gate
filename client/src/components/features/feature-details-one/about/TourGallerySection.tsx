@@ -20,6 +20,50 @@ function ytThumb(id: string): string {
   return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 }
 
+// direct video file (self-hosted mp4/webm/…), as opposed to a YouTube link
+function isDirectVideo(url: string): boolean {
+  return /\.(mp4|webm|mov|m4v|ogg)(\?.*)?$/i.test(url);
+}
+
+// ── self-hosted video overlay ──────────────────────────────────────────────────
+
+const FileVideoOverlay = ({ src, onClose }: { src: string; onClose: () => void }) => (
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-label="Video player"
+    tabIndex={0}
+    onKeyDown={e => e.key === 'Escape' && onClose()}
+    onClick={onClose}
+    style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      backgroundColor: 'rgba(0,0,0,0.92)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}
+  >
+    <button
+      aria-label="Close video"
+      onClick={onClose}
+      style={{
+        position: 'absolute', top: 18, right: 18,
+        background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '50%',
+        width: 42, height: 42, cursor: 'pointer', color: '#fff', fontSize: 18,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}
+    >
+      <i className="fa-solid fa-xmark" />
+    </button>
+    <video
+      src={src}
+      controls
+      autoPlay
+      playsInline
+      onClick={e => e.stopPropagation()}
+      style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: 8, outline: 'none' }}
+    />
+  </div>
+);
+
 // ── lightbox ───────────────────────────────────────────────────────────────────
 
 interface LightboxProps {
@@ -156,13 +200,15 @@ const TourGallerySection = () => {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [videoId, setVideoId] = useState('');
   const [videoOpen, setVideoOpen] = useState(false);
+  const [fileVideoSrc, setFileVideoSrc] = useState<string | null>(null);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   const images = tour?.gallery ?? [];
   const rawVideos = tour?.tourVideos ?? [];
-  const videoIds = rawVideos.map(extractYouTubeId).filter(Boolean);
+  const fileVideos = rawVideos.filter(isDirectVideo);
+  const videoIds = rawVideos.filter(v => !isDirectVideo(v)).map(extractYouTubeId).filter(Boolean);
 
-  if (images.length === 0 && videoIds.length === 0) return null;
+  if (images.length === 0 && videoIds.length === 0 && fileVideos.length === 0) return null;
 
   // all image URLs + alts for lightbox
   const lightboxImages = images.map(img => img.url);
@@ -230,9 +276,68 @@ const TourGallerySection = () => {
             </div>
           ))}
 
-          {/* Video items */}
-          {videoIds.map((vid, i) => {
+          {/* Self-hosted video items */}
+          {fileVideos.map((src, i) => {
             const key = images.length + i;
+            return (
+              <div
+                key={`fvid-${i}`}
+                style={itemStyle}
+                onClick={() => setFileVideoSrc(src)}
+                onMouseEnter={() => setHoveredIdx(key)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                role="button"
+                aria-label={`Play video ${i + 1}`}
+                tabIndex={0}
+                onKeyDown={e => e.key === 'Enter' && setFileVideoSrc(src)}
+              >
+                <video
+                  src={`${src}#t=0.1`}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  style={{
+                    ...imgStyle,
+                    transform: hoveredIdx === key ? 'scale(1.06)' : 'scale(1)',
+                  }}
+                />
+                <div
+                  style={{
+                    ...overlayBase,
+                    backgroundColor: 'rgba(0,0,0,0.35)',
+                    transition: 'background-color 0.3s',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 54,
+                      height: 54,
+                      borderRadius: '50%',
+                      background: hoveredIdx === key ? 'var(--tg-color-1)' : 'rgba(255,255,255,0.9)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'background 0.25s',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <i
+                      className="fa-solid fa-play"
+                      style={{
+                        color: hoveredIdx === key ? '#fff' : 'var(--tg-color-1)',
+                        fontSize: 18,
+                        marginLeft: 3,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* YouTube video items */}
+          {videoIds.map((vid, i) => {
+            const key = images.length + fileVideos.length + i;
             return (
               <div
                 key={`vid-${i}`}
@@ -306,12 +411,17 @@ const TourGallerySection = () => {
         />
       )}
 
-      {/* Video modal */}
+      {/* YouTube video modal */}
       <VideoPopup
         isVideoOpen={videoOpen}
         setIsVideoOpen={setVideoOpen}
         videoId={videoId}
       />
+
+      {/* Self-hosted video overlay */}
+      {fileVideoSrc && (
+        <FileVideoOverlay src={fileVideoSrc} onClose={() => setFileVideoSrc(null)} />
+      )}
     </>
   );
 };

@@ -43,7 +43,7 @@ const FeatureArea = () => {
       if (f.search)                   params.search     = f.search;
       if (f.isFeatured !== undefined) params.isFeatured = f.isFeatured;
 
-      const result = await tourService.list(params);
+      const result = await tourService.listPublic(params);
       let sorted = [...result.tours];
 
       if (f.sort === "price_asc")  sorted.sort((a, b) => (a.priceStartingFrom?.EGP ?? 0) - (b.priceStartingFrom?.EGP ?? 0));

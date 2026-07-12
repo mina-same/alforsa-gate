@@ -46,14 +46,14 @@ const TourDocumentSchema = new MongooseSchema({ url: { type: String, required: t
 const PricesSchema = new MongooseSchema({ solo: CurrencyPriceSchema, pax_2_4: CurrencyPriceSchema, pax_5_8: CurrencyPriceSchema, pax_9_16: CurrencyPriceSchema }, { _id: false });
 
 const SeasonSchema = new MongooseSchema({
-  seasonName: { type: String, required: true, trim: true, enum: ['1 May 2026 – 31 August 2026', '1 September 2026 – 19 December 2026 / 6 January 2027 – 24 March 2027', '20 December 2026 – 5 January 2027 / 25 March 2027 – 15 April 2027'] },
+  seasonName: { type: String, required: true, trim: true },
   startDate: Date, endDate: Date,
   prices: { type: PricesSchema, required: true },
   notes: [NoteSchema],
 }, { _id: false });
 
 const PricingPlanSchema = new MongooseSchema({
-  planName: { type: String, required: true, trim: true, enum: ['AFFORDABLE', 'GOLD (5 STAR STANDARD)', 'DIAMOND (5 STAR LUXURY)', 'TOUR PRICES'] },
+  planName: { type: String, required: true, trim: true },
   seasons: { type: [SeasonSchema], validate: { validator: (s: any[]) => s.length > 0, message: 'At least one season is required' } },
   notes: { type: [NoteSchema], default: [] },
 }, { _id: false });
@@ -127,6 +127,7 @@ export class Tour {
   @Prop({ type: [BlogReferenceSchema] }) blogReferences: IBlogReference[];
   @Prop({ type: [RelatedTourSchema] }) relatedTours: IRelatedTour[];
   @Prop({ type: [ReviewSchema] }) reviews: IReview[];
+  @Prop({ type: [String], default: [] }) tourVideos: string[];
 
   @Prop({ default: 0, min: 0 }) reviewsCount: number;
   @Prop({ default: 0, min: 0, max: 5 }) averageRating: number;

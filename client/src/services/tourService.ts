@@ -211,6 +211,17 @@ export const tourService = {
     return { tours: data.tours, pagination: data.pagination };
   },
 
+  // Public — active tours only, no auth required
+  async listPublic(params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    isFeatured?: boolean;
+  }): Promise<{ tours: TourListItem[]; pagination: PaginationMeta }> {
+    const { data } = await api.get('/tours/public', { params });
+    return { tours: data.tours, pagination: data.pagination };
+  },
+
   async getById(id: string): Promise<ITourFull> {
     const { data } = await api.get(`/tours/${id}`);
     return data.data;

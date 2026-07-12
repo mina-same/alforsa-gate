@@ -48,19 +48,21 @@ const PricingPlansSection = () => {
 
       {plans.map((plan) => (
         <div key={plan.planName} className="mb-25">
-          <div className="d-flex flex-wrap mb-15" style={{ gap: 8 }}>
-            {plan.seasons.map((season, si) => (
-              <button
-                key={si}
-                type="button"
-                onClick={() => setActiveSeason(si)}
-                className={activeSeason === si ? 'tg-btn tg-btn-switch-animation' : 'tg-btn tg-btn-gray'}
-                style={{ padding: '8px 14px', fontSize: 12, lineHeight: 1.3, textAlign: lang === 'ar' ? 'right' : 'left' }}
-              >
-                {season.seasonName}
-              </button>
-            ))}
-          </div>
+          {plan.seasons.length > 1 && (
+            <div className="d-flex flex-wrap mb-15" style={{ gap: 8 }}>
+              {plan.seasons.map((season, si) => (
+                <button
+                  key={si}
+                  type="button"
+                  onClick={() => setActiveSeason(si)}
+                  className={activeSeason === si ? 'tg-btn tg-btn-switch-animation' : 'tg-btn tg-btn-gray'}
+                  style={{ padding: '8px 14px', fontSize: 12, lineHeight: 1.3, textAlign: lang === 'ar' ? 'right' : 'left' }}
+                >
+                  {season.seasonName}
+                </button>
+              ))}
+            </div>
+          )}
 
           {plan.seasons[activeSeason] && (
             <div style={{ overflowX: 'auto' }}>

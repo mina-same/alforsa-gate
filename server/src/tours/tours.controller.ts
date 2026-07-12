@@ -34,6 +34,18 @@ export class ToursController {
     return { success: true, data: stats };
   }
 
+  @Get('public')
+  @Public()
+  @ApiOperation({ summary: 'List active tours (public)' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'isFeatured', required: false, type: Boolean })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  async findAllPublic(@Query() query: any) {
+    const result = await this.toursService.findAll({ ...query, isActive: 'true' });
+    return { success: true, ...result };
+  }
+
   @Get()
   @Roles('admin', 'superadmin')
   @ApiOperation({ summary: 'List all tours (paginated)' })

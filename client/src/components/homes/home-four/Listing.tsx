@@ -26,7 +26,7 @@ const Listing = () => {
       setLoading(true);
       setError(null);
       try {
-         const result = await tourService.list({ limit: 8, isActive: true });
+         const result = await tourService.listPublic({ limit: 8 });
          setTours(result.tours);
       } catch (err: any) {
          setError(err?.response?.data?.message || "Failed to load tours");

@@ -32,9 +32,22 @@ type ExtraItem         = { label: Loc; price: Record<Currency, number>; perPerso
 type ItineraryActivity = { heading: Loc; description: Loc; image?: TourImage }
 type ItineraryDay      = { day: number; title: Loc; description: Loc; activities: ItineraryActivity[] }
 
+type PaxKey       = 'solo' | 'pax_2_4' | 'pax_5_8' | 'pax_9_16'
+type SeasonItem   = { seasonName: string; startDate: string; endDate: string; prices: Record<PaxKey, Partial<Record<Currency, number>>>; notes: NoteItem[] }
+type PricingPlanItem = { planName: string; seasons: SeasonItem[]; notes: NoteItem[] }
+
+const PAX_KEYS   = ['solo', 'pax_2_4', 'pax_5_8', 'pax_9_16'] as const
+const PAX_LABELS: Record<PaxKey, string> = { solo: 'Solo', pax_2_4: '2–4 Pax', pax_5_8: '5–8 Pax', pax_9_16: '9–16 Pax' }
+
 const defaultLoc   = (): Loc       => ({ en: '', ar: '' })
 const defaultFaq   = (): FaqItem   => ({ question: defaultLoc(), answer: defaultLoc() })
 const defaultNote  = (): NoteItem  => ({ title: defaultLoc(), text: defaultLoc() })
+const defaultSeason = (): SeasonItem => ({
+  seasonName: '', startDate: '', endDate: '',
+  prices: { solo: {}, pax_2_4: {}, pax_5_8: {}, pax_9_16: {} },
+  notes: [],
+})
+const defaultPricingPlan = (): PricingPlanItem => ({ planName: '', seasons: [defaultSeason()], notes: [] })
 const defaultExtra = (): ExtraItem => ({ label: defaultLoc(), price: { EGP: 0, USD: 0, SAR: 0 }, perPerson: false })
 const defaultActivity = (): ItineraryActivity => ({ heading: defaultLoc(), description: defaultLoc() })
 const defaultDay  = (n: number): ItineraryDay => ({ day: n, title: defaultLoc(), description: defaultLoc(), activities: [] })
@@ -57,6 +70,7 @@ const defaultForm = () => ({
   meetingPoint:       defaultLoc(),
   cancellationPolicy: defaultLoc(),
   priceStartingFrom:  { EGP: 0, USD: 0, SAR: 0 } as Record<Currency, number>,
+  pricingPlans:       [] as PricingPlanItem[],
   inclusion:          [defaultLoc()] as Loc[],
   exclusion:          [defaultLoc()] as Loc[],
   tourHighlights:     [defaultLoc()] as Loc[],
@@ -187,6 +201,45 @@ const normalizeNotes = (raw: unknown): NoteItem[] => {
   })
 }
 
+const toDateInput = (v: unknown): string => {
+  if (typeof v === 'string') return v.slice(0, 10)
+  if (v instanceof Date) return v.toISOString().slice(0, 10)
+  return ''
+}
+
+const normalizePricingPlans = (raw: unknown): PricingPlanItem[] => {
+  if (!Array.isArray(raw) || raw.length === 0) return []
+  return raw.map(p => {
+    const r = getRecord(p)
+    const seasonsRaw = Array.isArray(r.seasons) ? r.seasons : []
+    const seasons = seasonsRaw.length > 0 ? seasonsRaw.map((s: unknown) => {
+      const sr = getRecord(s)
+      const pricesRaw = getRecord(sr.prices)
+      const prices = PAX_KEYS.reduce((acc, key) => {
+        const cp = getRecord(pricesRaw[key])
+        acc[key] = {
+          EGP: typeof cp.EGP === 'number' ? cp.EGP : undefined,
+          USD: typeof cp.USD === 'number' ? cp.USD : undefined,
+          SAR: typeof cp.SAR === 'number' ? cp.SAR : undefined,
+        }
+        return acc
+      }, {} as Record<PaxKey, Partial<Record<Currency, number>>>)
+      return {
+        seasonName: typeof sr.seasonName === 'string' ? sr.seasonName : '',
+        startDate:  toDateInput(sr.startDate),
+        endDate:    toDateInput(sr.endDate),
+        prices,
+        notes:      normalizeNotes(sr.notes),
+      }
+    }) : [defaultSeason()]
+    return {
+      planName: typeof r.planName === 'string' ? r.planName : '',
+      seasons,
+      notes: normalizeNotes(r.notes),
+    }
+  })
+}
+
 const normalizeItinerary = (raw: unknown): { generalDescription: Loc; days: ItineraryDay[] } => {
   const base = { generalDescription: defaultLoc(), days: [] as ItineraryDay[] }
   if (!raw || typeof raw !== 'object') return base
@@ -224,6 +277,7 @@ const normalizeTourForm = (tour: unknown): FormData => {
     images:            normalizeImages(Array.isArray(tourRecord.images) ? tourRecord.images : undefined),
     gallery:           normalizeImages(Array.isArray(tourRecord.gallery) && tourRecord.gallery.length ? tourRecord.gallery : undefined).filter(i => i.url),
     priceStartingFrom: { ...base.priceStartingFrom, ...getRecord(tourRecord.priceStartingFrom) },
+    pricingPlans:      normalizePricingPlans(tourRecord.pricingPlans),
     tourHighlights:    normalizeLocArray(tourRecord.tourHighlights),
     inclusion:         normalizeLocArray(tourRecord.inclusion),
     exclusion:         normalizeLocArray(tourRecord.exclusion),
@@ -566,6 +620,7 @@ const AdminTourForm = ({ tourId, onSaved, onCancel }: Props) => {
   const [allTours,       setAllTours]       = useState<TourListItem[]>([])
   const [tourSearch,     setTourSearch]     = useState('')
   const [expandedDays,   setExpandedDays]   = useState<Set<number>>(new Set())
+  const [expandedPlans,  setExpandedPlans]  = useState<Set<number>>(new Set())
 
   useEffect(() => {
     if (!tourId) return
@@ -1149,6 +1204,244 @@ const AdminTourForm = ({ tourId, onSaved, onCancel }: Props) => {
                       </div>
                     </Field>
                   </div>
+                </div>
+              </div>
+
+              {/* Pricing Plans (seasonal, per-group-size, multi-currency) */}
+              <div className="atf-card">
+                <div className="atf-card__head">
+                  <h3>Pricing Plans</h3>
+                  <span style={{ fontSize: 11.5, fontWeight: 500, color: '#9ca3af' }}>Seasonal, per-group-size pricing shown on the tour page</span>
+                </div>
+                <div className="atf-card__body">
+                  {form.pricingPlans.map((plan, pi) => {
+                    const isOpen = expandedPlans.has(pi)
+                    return (
+                      <div key={pi} className="atf-itinerary-day">
+                        <div className="atf-itinerary-day__head"
+                          onClick={() => setExpandedPlans(prev => {
+                            const n = new Set(prev)
+                            if (n.has(pi)) n.delete(pi); else n.add(pi)
+                            return n
+                          })}
+                        >
+                          <span className="atf-itinerary-day__badge">Plan {pi + 1}</span>
+                          <span className="atf-itinerary-day__title">
+                            {plan.planName || <span style={{ color: '#9ca3af', fontWeight: 400 }}>Untitled plan</span>}
+                          </span>
+                          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                            <span style={{ fontSize: 11.5, color: '#9ca3af' }}>{plan.seasons.length} season{plan.seasons.length !== 1 ? 's' : ''}</span>
+                            {isOpen ? <ChevronUp size={14} style={{ color: '#6b7280' }} /> : <ChevronDown size={14} style={{ color: '#6b7280' }} />}
+                          </div>
+                          <button type="button" className="atf-remove-btn"
+                            onClick={e => { e.stopPropagation(); set('pricingPlans', form.pricingPlans.filter((_, j) => j !== pi)) }}>
+                            <X size={14} />
+                          </button>
+                        </div>
+
+                        {isOpen && (
+                          <div className="atf-itinerary-day__body">
+                            <Field label="Plan Name" hint="e.g. Standard, Gold, Diamond">
+                              <TextInput
+                                value={plan.planName}
+                                placeholder="e.g. Standard Package"
+                                onChange={e => {
+                                  const arr = [...form.pricingPlans]
+                                  arr[pi] = { ...plan, planName: e.target.value }
+                                  set('pricingPlans', arr)
+                                }}
+                              />
+                            </Field>
+
+                            {plan.seasons.map((season, si) => (
+                              <div key={si} className="atf-itinerary-activity" style={{ marginTop: 14 }}>
+                                <div className="atf-itinerary-activity__head">
+                                  <span>Season {si + 1}</span>
+                                  <div style={{ flex: 1 }} />
+                                  {plan.seasons.length > 1 && (
+                                    <button type="button" className="atf-remove-btn"
+                                      onClick={() => {
+                                        const arr = [...form.pricingPlans]
+                                        arr[pi] = { ...plan, seasons: plan.seasons.filter((_, j) => j !== si) }
+                                        set('pricingPlans', arr)
+                                      }}>
+                                      <X size={14} />
+                                    </button>
+                                  )}
+                                </div>
+
+                                <Field label="Season Name" hint="Shown as a tab when a plan has more than one season">
+                                  <TextInput
+                                    value={season.seasonName}
+                                    placeholder="e.g. Summer 2026"
+                                    onChange={e => {
+                                      const arr = [...form.pricingPlans]
+                                      const seasons = [...plan.seasons]
+                                      seasons[si] = { ...season, seasonName: e.target.value }
+                                      arr[pi] = { ...plan, seasons }
+                                      set('pricingPlans', arr)
+                                    }}
+                                  />
+                                </Field>
+
+                                <div className="atf-grid-2" style={{ marginTop: 10, marginBottom: 10 }}>
+                                  <Field label="Start Date" hint="Optional">
+                                    <TextInput
+                                      type="date"
+                                      value={season.startDate}
+                                      onChange={e => {
+                                        const arr = [...form.pricingPlans]
+                                        const seasons = [...plan.seasons]
+                                        seasons[si] = { ...season, startDate: e.target.value }
+                                        arr[pi] = { ...plan, seasons }
+                                        set('pricingPlans', arr)
+                                      }}
+                                    />
+                                  </Field>
+                                  <Field label="End Date" hint="Optional">
+                                    <TextInput
+                                      type="date"
+                                      value={season.endDate}
+                                      onChange={e => {
+                                        const arr = [...form.pricingPlans]
+                                        const seasons = [...plan.seasons]
+                                        seasons[si] = { ...season, endDate: e.target.value }
+                                        arr[pi] = { ...plan, seasons }
+                                        set('pricingPlans', arr)
+                                      }}
+                                    />
+                                  </Field>
+                                </div>
+
+                                <p className="atf-label" style={{ marginBottom: 8 }}>Price per person</p>
+                                <div style={{ overflowX: 'auto' }}>
+                                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                    <thead>
+                                      <tr>
+                                        <th style={{ textAlign: 'left', fontSize: 11.5, color: '#6b7280', fontWeight: 600, padding: '0 6px 6px 0' }}>Group Size</th>
+                                        {CURRENCIES.map(c => (
+                                          <th key={c} style={{ textAlign: 'left', fontSize: 11.5, color: '#6b7280', fontWeight: 600, padding: '0 6px 6px' }}>
+                                            {CURRENCY_META[c].flag} {c}
+                                          </th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {PAX_KEYS.map(pax => (
+                                        <tr key={pax}>
+                                          <td style={{ fontSize: 12.5, fontWeight: 500, color: '#374151', padding: '4px 6px 4px 0', whiteSpace: 'nowrap' }}>
+                                            {PAX_LABELS[pax]}
+                                          </td>
+                                          {CURRENCIES.map(c => (
+                                            <td key={c} style={{ padding: '4px 6px' }}>
+                                              <TextInput
+                                                type="number"
+                                                min="0"
+                                                placeholder="0"
+                                                value={season.prices[pax]?.[c] ?? ''}
+                                                onChange={e => {
+                                                  const arr = [...form.pricingPlans]
+                                                  const seasons = [...plan.seasons]
+                                                  const prices = { ...season.prices, [pax]: { ...season.prices[pax], [c]: Number(e.target.value) } }
+                                                  seasons[si] = { ...season, prices }
+                                                  arr[pi] = { ...plan, seasons }
+                                                  set('pricingPlans', arr)
+                                                }}
+                                              />
+                                            </td>
+                                          ))}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                                {season.notes.length > 0 && (
+                                  <div style={{ marginTop: 12 }}>
+                                    {season.notes.map((note, ni) => (
+                                      <div key={ni} className="atf-faq-item">
+                                        <div className="atf-faq-item__num">{ni + 1}</div>
+                                        <div className="atf-faq-item__inner">
+                                          <LInput
+                                            label="Note Title"
+                                            value={note.title} lang={lang}
+                                            onChange={v => {
+                                              const arr = [...form.pricingPlans]
+                                              const seasons = [...plan.seasons]
+                                              const notes = [...season.notes]; notes[ni] = { ...note, title: v }
+                                              seasons[si] = { ...season, notes }
+                                              arr[pi] = { ...plan, seasons }
+                                              set('pricingPlans', arr)
+                                            }}
+                                            placeholder={lang === 'ar' ? 'عنوان الملاحظة' : 'e.g. Deposit required'}
+                                          />
+                                          <div style={{ marginTop: 12 }}>
+                                            <LRichTextEditor
+                                              label="Note Text"
+                                              value={note.text} lang={lang}
+                                              compact minHeight={60}
+                                              onChange={v => {
+                                                const arr = [...form.pricingPlans]
+                                                const seasons = [...plan.seasons]
+                                                const notes = [...season.notes]; notes[ni] = { ...note, text: v }
+                                                seasons[si] = { ...season, notes }
+                                                arr[pi] = { ...plan, seasons }
+                                                set('pricingPlans', arr)
+                                              }}
+                                              placeholder={lang === 'ar' ? 'تفاصيل الملاحظة…' : 'Note details…'}
+                                            />
+                                          </div>
+                                        </div>
+                                        <button type="button" className="atf-remove-btn"
+                                          style={{ position: 'absolute', top: 10, right: 10 }}
+                                          onClick={() => {
+                                            const arr = [...form.pricingPlans]
+                                            const seasons = [...plan.seasons]
+                                            seasons[si] = { ...season, notes: season.notes.filter((_, j) => j !== ni) }
+                                            arr[pi] = { ...plan, seasons }
+                                            set('pricingPlans', arr)
+                                          }}>
+                                          <X size={14} />
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                <button type="button" className="atf-add-btn" style={{ marginTop: 10 }}
+                                  onClick={() => {
+                                    const arr = [...form.pricingPlans]
+                                    const seasons = [...plan.seasons]
+                                    seasons[si] = { ...season, notes: [...season.notes, defaultNote()] }
+                                    arr[pi] = { ...plan, seasons }
+                                    set('pricingPlans', arr)
+                                  }}>
+                                  <Plus size={13} /> Add note
+                                </button>
+                              </div>
+                            ))}
+
+                            <button type="button" className="atf-add-btn" style={{ marginTop: 14 }}
+                              onClick={() => {
+                                const arr = [...form.pricingPlans]
+                                arr[pi] = { ...plan, seasons: [...plan.seasons, defaultSeason()] }
+                                set('pricingPlans', arr)
+                              }}>
+                              <Plus size={13} /> Add season
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+
+                  <button type="button" className="atf-add-btn"
+                    onClick={() => {
+                      const idx = form.pricingPlans.length
+                      set('pricingPlans', [...form.pricingPlans, defaultPricingPlan()])
+                      setExpandedPlans(prev => new Set([...prev, idx]))
+                    }}>
+                    <Plus size={13} /> Add pricing plan
+                  </button>
                 </div>
               </div>
 

@@ -321,15 +321,6 @@ const seed = async () => {
               pax_9_16: { USD:  950, SAR: 3565, EGP: 47500 },
             },
           },
-          {
-            seasonName: '1 September 2026 – 19 December 2026 / 6 January 2027 – 24 March 2027',
-            prices: {
-              solo:     { USD: 1450, SAR: 5438, EGP: 72500 },
-              pax_2_4:  { USD: 1180, SAR: 4425, EGP: 59000 },
-              pax_5_8:  { USD:  980, SAR: 3675, EGP: 49000 },
-              pax_9_16: { USD:  820, SAR: 3075, EGP: 41000 },
-            },
-          },
         ],
         notes: [
           {
@@ -717,6 +708,12 @@ const seed = async () => {
         url: '/uploads/tours/russia/sochi-main-banner.png',
         label: { en: 'Sochi Tour Marketing Banner', ar: 'البانر التسويقي لجولة سوتشي' },
       },
+    ],
+
+    // Gallery videos — local MP4 clips from رحلة روسيا/gallory
+    tourVideos: [
+      '/uploads/tours/russia/sochi-video-1.mp4',
+      '/uploads/tours/russia/sochi-video-2.mp4',
     ],
 
     reviewsCount: 89,

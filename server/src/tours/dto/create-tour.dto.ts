@@ -128,6 +128,11 @@ export class CreateTourDto {
   @IsOptional()
   reviews?: any[];
 
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  tourVideos?: string[];
+
   @ApiPropertyOptional()
   @IsOptional()
   groupSize?: any;

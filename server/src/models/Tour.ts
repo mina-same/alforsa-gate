@@ -164,6 +164,7 @@ export interface ITour extends Document {
   blogReferences?: IBlogReference[];
   relatedTours?: IRelatedTour[];
   reviews?: IReview[];
+  tourVideos?: string[];
   reviewsCount?: number;
   averageRating?: number;
   groupSize?: IGroupSize;
@@ -459,6 +460,7 @@ const TourSchema = new Schema<ITour>(
     blogReferences:      [BlogReferenceSchema],
     relatedTours:        [RelatedTourSchema],
     reviews:             [ReviewSchema],
+    tourVideos:          { type: [String], default: [] },
 
     reviewsCount:  { type: Number, default: 0, min: 0 },
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
