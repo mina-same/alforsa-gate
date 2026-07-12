@@ -1,0 +1,8 @@
+OpenWA
+رحلة روسيا
+server/uploads
+server/dist
+client/dist
+client/not-used
+*.MP4
+.claude

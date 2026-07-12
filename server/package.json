@@ -3,6 +3,12 @@
   "version": "2.0.0",
   "description": "Alforsa Gate API Server - NestJS",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "overrides": {
+    "iconv-lite": "^0.7.3"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",

@@ -1,4 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "echo 'skip nest build — api/index.ts compiled by @vercel/node'",
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }
