@@ -12,6 +12,7 @@ const TourSEO = () => {
   return <SEO pageTitle={title} description={description} image={image} />;
 };
 
+
 const TourDetailsOneSlugMain = () => {
   return (
     <TourDetailsProvider>
